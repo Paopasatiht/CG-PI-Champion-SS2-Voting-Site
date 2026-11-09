@@ -1,8 +1,13 @@
 .git
+.github
 data
 node_modules
 tests
 tools
+deploy
+*.tar.gz
 demo-single-file.html
 assets/ui-concepts
+assets/js/access-codes.js
 *.md
+start-server.bat

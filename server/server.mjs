@@ -292,6 +292,17 @@ export const server = http.createServer(async (req, res) => {
 server.listen(PORT, HOST, () => {
   const nets = Object.values(os.networkInterfaces()).flat().filter(n => n && n.family === 'IPv4' && !n.internal).map(n => n.address);
   console.log(`PI Champion S2 live server — ${JUDGES.length} judges, data in ${DATA_DIR}`);
-  console.log(`  Judges : http://localhost:${PORT}/` + nets.map(a => `   http://${a}:${PORT}/`).join(''));
+  if (process.env.PUBLIC_URL) console.log(`  Judges : ${process.env.PUBLIC_URL.replace(/\/$/, '')}/   (Admin: ${process.env.PUBLIC_URL.replace(/\/$/, '')}/admin)`);
+  else if (fs.existsSync('/.dockerenv')) console.log(`  Judges : http://<IP of this host>:<published port>/   (set PUBLIC_URL to print the exact link)`);
+  else console.log(`  Judges : http://localhost:${PORT}/` + nets.map(a => `   http://${a}:${PORT}/`).join(''));
   console.log(`  Admin  : http://localhost:${PORT}/admin`);
 });
+
+// Graceful shutdown (docker stop / Ctrl+C): finish in-flight requests, then exit.
+for (const sig of ['SIGTERM', 'SIGINT']) {
+  process.on(sig, () => {
+    console.log(`${sig} received, shutting down`);
+    server.close(() => process.exit(0));
+    setTimeout(() => process.exit(0), 5000).unref();
+  });
+}

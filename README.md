@@ -135,6 +135,28 @@ docker compose up -d --build
 - ทดสอบ: `npm test` (smoke + integration test ของ server)
 - สร้างรหัสใหม่ทั้งชุด: `node server/generate-codes.mjs --force` (รหัสเดิมใช้ไม่ได้ทันที)
 
+## Deploy ด้วย Docker (ready to deploy)
+
+ต้องมี Docker Engine หรือ Docker Desktop บนเครื่องที่ใช้เป็น server
+
+```bash
+# 1) build + run จาก source
+docker compose up -d --build
+
+# หรือ 1) เครื่องไม่มีอินเทอร์เน็ต: โหลด image ที่ export ไว้ (deploy/pi-champion-s2-image.tar.gz, linux/amd64)
+docker load -i deploy/pi-champion-s2-image.tar.gz
+docker compose up -d
+
+# 2) ดูลิงก์และ log
+docker compose logs -f
+```
+
+- รหัสอยู่ที่ `./data/CODES-PRIVATE.txt` ถ้า `./data` มีรหัสอยู่แล้ว (เช่นชุด 7 ท่านที่สร้างไว้) จะใช้ชุดเดิม ไม่สร้างใหม่
+- ตั้งค่าใน `.env` (ดู `.env.example`): `PORT`, `PUBLIC_URL` (ลิงก์ที่จะแจกกรรมการ), `JUDGES`
+- Container รันแบบ non-root, read-only filesystem, ตัด Linux capabilities ทั้งหมด, มี healthcheck และ restart อัตโนมัติ
+- สำรองข้อมูล: copy โฟลเดอร์ `./data` (คะแนน, รหัส, audit log)
+- อัปเดตโค้ด: `docker compose up -d --build` (ข้อมูลใน `./data` ไม่หาย)
+
 ## กติกาคะแนนที่ใช้เป็น Design Target
 
 - Final Day ให้คะแนน **0–10** ครั้งละ **0.5** ตามเกณฑ์ที่ Admin กำหนด

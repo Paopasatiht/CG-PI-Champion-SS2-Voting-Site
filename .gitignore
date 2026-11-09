@@ -18,3 +18,7 @@ data/
 
 # Hashed login codes for the static/artifact build (generated)
 assets/js/access-codes.js
+
+# Docker image exports
+*.tar.gz
+deploy/
