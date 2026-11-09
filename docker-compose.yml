@@ -1,8 +1,10 @@
 # PI Champion Season 2 — ready-to-deploy stack
 #   docker compose up -d --build     start (or: docker load -i pi-champion-s2-image.tar.gz && docker compose up -d)
 #   docker compose logs -f           see judge/admin URLs and activity
-#   docker compose down              stop (data stays in ./data)
-# Login codes: ./data/CODES-PRIVATE.txt (created on first start if ./data has none)
+#   docker compose down              stop (scores stay in the pi-champion-data volume)
+# Login codes: seed/CODES.txt (copied into the volume on first start)
+# Backup:  docker compose cp pi-champion:/app/data ./data-backup
+# Wipe everything and start clean:  docker compose down -v
 services:
   pi-champion:
     build: .
@@ -16,7 +18,7 @@ services:
       TZ: Asia/Bangkok
       PUBLIC_URL: "${PUBLIC_URL:-}"   # e.g. http://10.1.2.3:8080 — printed in the logs for judges
     volumes:
-      - ./data:/app/data
+      - pi-champion-data:/app/data   # named volume: writable by the non-root container user on any host
     init: true
     read_only: true
     tmpfs:
@@ -31,3 +33,6 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+
+volumes:
+  pi-champion-data:

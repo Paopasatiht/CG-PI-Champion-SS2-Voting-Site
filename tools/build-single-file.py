@@ -7,13 +7,14 @@ import base64, pathlib, re
 root = pathlib.Path(__file__).resolve().parent.parent
 html = (root / 'index.html').read_text(encoding='utf-8')
 def inline_images(src):
-    for img in sorted((root / 'assets/img').glob('*.webp')):
+    for img in sorted((root / 'assets/img').rglob('*.webp')):
+        rel = img.relative_to(root / 'assets/img').as_posix()
         uri = 'data:image/webp;base64,' + base64.b64encode(img.read_bytes()).decode()
-        src = src.replace(f'./assets/img/{img.name}', uri)
+        src = src.replace(f'./assets/img/{rel}', uri).replace(f'../img/{rel}', uri)
     return src
 
 def css(m):
-    return '<style>\n' + (root / m.group(1)).read_text(encoding='utf-8') + '\n</style>'
+    return '<style>\n' + inline_images((root / m.group(1)).read_text(encoding='utf-8')) + '\n</style>'
 
 def js(m):
     if m.group(1).endswith('access-codes.js'):

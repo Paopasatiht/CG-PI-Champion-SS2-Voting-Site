@@ -392,16 +392,60 @@
   function adminTieReview(){const list=ranked(),groups=[];for(let i=1;i<list.length;i++){if(list[i].overall===list[i-1].overall && (list[i].rank<=3||list[i-1].rank<=3)){groups.push([list[i-1],list[i]])}}return `<div class="tie-review-workspace"><div class="tie-review-header"><div class="tie-review-seal">${icon('trophy')}</div><div><div class="section-eyebrow">PRIVATE · ADMIN ONLY</div><h3>Top 3 Tie Review</h3><p>ตรวจสอบคะแนนที่เสมอกันก่อนเผยแพร่ผล โดยไม่เปลี่ยนคะแนนที่คำนวณได้</p></div></div>${groups.length?groups.map(g=>`<div class="tie-review-sample"><div class="tie-alert">${icon('warning')} คะแนนเสมอที่กระทบ Top 3: ${esc(g[0].name)} และ ${esc(g[1].name)}</div><div class="tie-sample-grid">${g.map(t=>`<div class="tie-team"><strong>${esc(t.name)}</strong><span>${fixed(t.overall)} / 100</span></div>`).join('')}</div><p class="small-gray">โปรโตไทป์นี้ตรวจจับ Tie แต่ยังไม่มีฟอร์มจัดอันดับแทนการตัดสินของ Admin; ต้องพัฒนา Workflow อนุมัติอันดับพร้อม Audit ก่อนใช้งานจริง</p></div>`).join(''):`<div class="tie-review-empty"><div class="tie-review-check">${icon('checkcircle')}</div><h4>No Top 3 tie detected</h4><p>${REAL()?'จากคะแนนจริงของกรรมการ':'จากคะแนนจำลองในเบราว์เซอร์นี้'} ยังไม่พบคะแนนเสมอที่กระทบอันดับ 1–3</p><div class="tie-demo-example"><span class="mini-chip">UX Scenario Preview</span><div class="tie-sample-grid"><div class="tie-team"><strong>ทีมตัวอย่าง A</strong><span>86.00 / 100</span></div><div class="tie-team"><strong>ทีมตัวอย่าง B</strong><span>86.00 / 100</span></div></div><small>กรณีตัวอย่างที่ต้องส่งกลับให้กรรมการทบทวน ก่อน Admin จัดลำดับพร้อมบันทึกเหตุผล</small></div></div>`}</div>`;}
   function stage(){
     const list=ranked();const preview=state.preview&&!state.published;
-    return `${pageHead({title:state.stageShot===1?'ประกาศผล · Top 3':'ประกาศผล · คะแนนละเอียด',sub:preview?'Admin Preview · ยังไม่เปิดเผยต่อสาธารณะ':'เผยแพร่แล้ว',actions:`<button class="btn ${state.stageShot===1?'primary':'outline'} small" data-action="stage-shot" data-shot="1">Shot 1</button><button class="btn ${state.stageShot===2?'primary':'outline'} small" data-action="stage-shot" data-shot="2">Shot 2</button><button class="btn outline small" data-action="fullscreen">${icon('fullscreen')} Fullscreen</button><button class="btn outline small" data-action="nav" data-target="admin">${icon('back')} ภาพรวม</button>`})}${state.stageShot===1?stage1(list,preview):stage2(list,preview)}<p class="footer-note">${REAL()?'* คะแนนเฉลี่ยจากกรรมการทุกท่าน · ไม่เปิดเผยคะแนนของกรรมการรายบุคคล':'* คะแนนและทีมทั้งหมดเป็นข้อมูลสมมติสำหรับทดสอบหน้าจอ · ไม่เปิดเผยคะแนนของกรรมการรายบุคคล'}</p>`;
+    return `${pageHead({title:state.stageShot===1?'ประกาศผล · Top 5':'ประกาศผล · คะแนนละเอียด',sub:preview?'Admin Preview · ยังไม่เปิดเผยต่อสาธารณะ':'เผยแพร่แล้ว',actions:`<button class="btn ${state.stageShot===1?'primary':'outline'} small" data-action="stage-shot" data-shot="1">Top 5</button><button class="btn ${state.stageShot===2?'primary':'outline'} small" data-action="stage-shot" data-shot="2">คะแนนละเอียด</button><button class="btn outline small" data-action="fullscreen">${icon('fullscreen')} Fullscreen</button><button class="btn outline small" data-action="nav" data-target="admin">${icon('back')} ภาพรวม</button>`})}${state.stageShot===1?stage1(list,preview):stage2(list,preview)}<p class="footer-note">${REAL()?'* คะแนนเฉลี่ยจากกรรมการทุกท่าน · ไม่เปิดเผยคะแนนของกรรมการรายบุคคล':'* คะแนนและทีมทั้งหมดเป็นข้อมูลสมมติสำหรับทดสอบหน้าจอ · ไม่เปิดเผยคะแนนของกรรมการรายบุคคล'}</p>`;
   }
   function medalGraphic(rank) {
     const metal=rank===1?['#fff0ad','#edbe50','#986b25']:rank===2?['#fcfffc','#b5c9ca','#6d8e8a']:['#fff2e5','#db9e74','#92573e'];
     const id='metal-'+rank;
     return `<span class="medal" aria-label="อันดับ ${rank}"><svg viewBox="0 0 120 120" role="img" aria-hidden="true"><defs><radialGradient id="${id}" cx=".34" cy=".25" r=".82"><stop offset="0" stop-color="${metal[0]}"/><stop offset=".54" stop-color="${metal[1]}"/><stop offset="1" stop-color="${metal[2]}"/></radialGradient><linearGradient id="${id}-ring" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fffce5"/><stop offset=".33" stop-color="${metal[1]}"/><stop offset=".65" stop-color="${metal[2]}"/><stop offset="1" stop-color="#fff5c8"/></linearGradient></defs><path d="M34 77 L23 108 42 98 54 113 60 86 M86 77 L97 108 78 98 66 113 60 86" fill="${metal[2]}" opacity=".84"/><circle cx="60" cy="52" r="45" fill="url(#${id}-ring)"/><circle cx="60" cy="52" r="39.2" fill="url(#${id})" stroke="#ffffffa8" stroke-width="2"/><circle cx="60" cy="52" r="32" fill="none" stroke="#ffffff8a" stroke-width="1.4"/><path d="M33 45 C42 20 64 18 80 28" fill="none" stroke="#ffffffe0" stroke-width="3" stroke-linecap="round" opacity=".62"/><text x="60" y="69" font-family="var(--font-ui)" text-anchor="middle" font-size="50" font-weight="bold" fill="#194932">${rank}</text></svg></span>`;
   }
+  /* Final Results · Top 5 award stage.
+     Data: ranked() (overall rounded to 2 dp, shared rank on equal overall).
+     Card slot (position/size) comes from list order; tier, number and label come from the rank,
+     so tied teams share a number and a metal. */
+  const AWARD_LABEL={1:'CHAMPION',2:'SECOND PLACE',3:'THIRD PLACE',4:'FOURTH PLACE',5:'FIFTH PLACE'};
+  const AWARD_TIER={1:'gold',2:'silver',3:'copper'};
+  function hasResult(teamId){return REAL()?judgeCompletionCount(teamId)>0:true;}
+  function awardScore(v){return v===null||v===undefined||!Number.isFinite(Number(v))?'—':Number(v).toFixed(2);}
+  function awardEntries(list){
+    const scored=list.filter(t=>hasResult(t.id));
+    if(!scored.length)return [1,2,3,4,5].map(n=>({id:'empty-'+n,name:'รอผลคะแนน',rank:n,overall:null,placeholder:true}));
+    let rank=0;const ranked=scored.map((t,i)=>{if(i===0||t.overall!==scored[i-1].overall)rank=i+1;return {...t,rank};});
+    return ranked.filter((t,i)=>i<5||t.rank<=5);
+  }
+  function awardCard(t,slot,list){
+    const tier=t.rank<=3?AWARD_TIER[t.rank]:'finalist';const tie=!t.placeholder&&list.filter(x=>x.rank===t.rank).length>1;
+    const len=[...String(t.name)].length;const size=len<=9?'xl':len<=15?'lg':'md';
+    const label=(AWARD_LABEL[t.rank]||`RANK ${t.rank}`)+(tie?' · TIE':'');
+    return `<li class="award-card award-card--${tier} award-slot-${slot}${t.placeholder?' is-placeholder':''}" aria-label="อันดับ ${t.rank}${tie?' (คะแนนเท่ากัน)':''}: ${esc(t.name)}, คะแนน ${awardScore(t.overall)} จาก 100">
+      <span class="award-sheen" aria-hidden="true"></span>
+      <span class="rank-pennant" aria-hidden="true">${String(t.rank).padStart(2,'0')}</span>
+      <span class="award-label">${label}</span>
+      <h2 class="award-team award-team--${size}">${esc(t.name)}</h2>
+      <span class="award-divider" aria-hidden="true"></span>
+      <p class="award-score"><strong>${awardScore(t.overall)}</strong><span> / 100</span></p>
+      <span class="award-score-label">OVERALL SCORE</span>
+    </li>`;
+  }
   function stage1(list,preview){
-    const top=list.slice(0,3);const order=[top[1],top[0],top[2]].filter(Boolean);const cls=['silver','first','bronze'];
-    return `<section class="stage" aria-label="Top 3 competition results">${wave()}<canvas class="ribbon-webgl" data-ribbon-scene="stage" aria-hidden="true"></canvas>${preview?'<div class="preview-stamp">ADMIN PREVIEW · NOT PUBLIC</div>':''}<div class="stage-inner"><div class="stage-heading"><div class="kicker">KASSET · PI CHAMPION SEASON 2</div><div class="stage-laurel" aria-hidden="true">✧ ✦ ✧</div><h1>Final Results</h1><p>Celebrating ideas that move us forward</p></div><div class="podium show-stage-podium">${order.map((t,i)=>`<article class="podium-card ${cls[i]}">${medalGraphic(t.rank)}<div class="award-label">${t.rank===1?'THE CHAMPION':t.rank===2?'FIRST RUNNER-UP':'SECOND RUNNER-UP'}</div><h2>${esc(t.name)}</h2><div class="points">${fixed(t.overall)}</div><small>OVERALL SCORE / 100</small></article>`).join('')}</div><div class="stage-floor-glow" aria-hidden="true"></div><div class="stage-broadcast-note">KAsset · PI Champion Season 2 &nbsp; · &nbsp; ${preview?'Private rehearsal only':'Official results presentation'}</div></div></section>`;
+    const entries=awardEntries(list);const podium=entries.slice(0,3);const finalists=entries.slice(3);
+    const demo=!REAL();const empty=entries[0]?.placeholder;
+    const badge=preview?'ADMIN PREVIEW':demo?'DEMO DATA':'';
+    const note=empty?'ยังไม่มีคะแนนที่กรรมการยืนยัน — ผลจะแสดงเมื่อมีคะแนน'
+      :preview?'ตัวอย่างก่อนประกาศผล — ยังไม่ใช่ผลอย่างเป็นทางการ'
+      :demo?'ข้อมูลจำลองสำหรับทดสอบหน้าจอ — ไม่ใช่ผลการแข่งขันจริง'
+      :`ผลอย่างเป็นทางการ · Demo ${state.demoWeight}% + Pitching Day ${100-state.demoWeight}% · คะแนนเฉลี่ยจากกรรมการ ${JUDGE_TOTAL()} ท่าน`;
+    return `<div class="awards-shell"><section class="awards-stage" aria-labelledby="awards-title">
+      <header class="awards-header">
+        <p class="awards-kicker">KASSET · PI CHAMPION SEASON 2</p>
+        ${badge?`<span class="awards-badge">${badge}</span>`:''}
+        <h1 id="awards-title" class="awards-title">Final Results</h1>
+        <span class="awards-top-tag">TOP 5</span>
+      </header>
+      <ol class="awards-podium" aria-label="อันดับ 1 ถึง 3">${podium.map((t,i)=>awardCard(t,i+1,entries)).join('')}</ol>
+      ${finalists.length?`<ol class="awards-finalists" start="${finalists[0].rank}" style="--n:${finalists.length}" aria-label="อันดับ 4 ถึง 5">${finalists.map((t,i)=>awardCard(t,i+4,entries)).join('')}</ol>`:''}
+      <footer class="awards-footer"><span class="awards-floor" aria-hidden="true"></span><p>${note}</p></footer>
+    </section></div>`;
   }
   function stage2(list,preview){
     return `<section class="stage results-stage">${wave()}${preview?'<div class="preview-stamp">ADMIN PREVIEW · NOT PUBLIC</div>':''}<div class="stage-inner"><div class="stage-heading"><div class="kicker">KAsset · PI CHAMPION SEASON 2</div><h1>Detailed Final Results</h1><p>ค่าเฉลี่ยแยกตามเกณฑ์ของทุกทีม · Demo ${state.demoWeight}% + Final Day ${100-state.demoWeight}%</p></div><div class="table-wrap results-table-shell" style="border:0"><table class="results-table"><thead><tr class="results-group-row"><th colspan="2" class="group-rank">TEAM &amp; RANK</th><th colspan="${DEMO.length+1}" class="group-demo">DEMO ROUND · ${state.demoWeight}%</th><th colspan="${FINAL.length+1}" class="group-final">FINAL DAY · ${100-state.demoWeight}%</th><th class="group-overall">OVERALL</th></tr><tr><th>Rank</th><th>Team</th>${DEMO.map(c=>`<th>Demo<br/>${esc(c.name)}<br/>AVG</th>`).join('')}<th>Demo<br/>Score</th>${FINAL.map(c=>`<th>Final<br/>${esc(c.name)}<br/>AVG</th>`).join('')}<th>Final Day<br/>Score</th><th>Final<br/>Score</th></tr></thead><tbody>${list.map((t,i)=>`<tr class="${i<3?'top':''}"><td>${i<3?`<span class="rank-emblem rank-${i+1}">${i+1}</span>`:t.rank}</td><td class="team-col">${esc(t.name)}</td>${DEMO.map(c=>`<td>${fixed(state.demoScores[t.id]?.[c.id]??0)}</td>`).join('')}<td><strong>${fixed(t.demo)}</strong></td>${FINAL.map(c=>`<td>${fixed(averageFinalCriterion(t.id,c.id))}</td>`).join('')}<td><strong>${fixed(t.final)}</strong></td><td>${fixed(t.overall)}</td></tr>`).join('')}</tbody></table></div><div class="results-foot">แสดงเฉพาะค่าเฉลี่ยรายเกณฑ์ ไม่มีชื่อหรือคะแนนรายกรรมการ · คำนวณเต็มความละเอียดและปัด Overall Score 2 ตำแหน่งก่อนจัดอันดับ</div></div></section>`;
@@ -416,7 +460,7 @@
     else if(d.type==='lockTeam'){title='Confirm Lock Team';const t=state.teams.find(x=>x.id===d.teamId);body=`<p>ล็อก ${esc(t.name)} แล้วกรรมการจะไม่สามารถแก้คะแนนได้จนกว่า Admin จะ Unlock ก่อน Publish</p><div class="notice">Completed ${judgeCompletionCount(d.teamId)}/${JUDGE_TOTAL()}</div>`;confirm='Confirm Lock';}
     else if(d.type==='unlockTeam'){title='Confirm Unlock Team';body='<p>Unlock ทีมนี้เพื่อให้กรรมการกลับมาแก้คะแนนได้ก่อน Publish</p>';confirm='Confirm Unlock';}
     else if(d.type==='lockAll'){title='Confirm Lock All';body='<p>ปิดการให้คะแนนของทุกทีมพร้อมกัน หลังจากกรรมการทั้งหมด Submit ครบแล้ว</p>';confirm='Lock All';}
-    else if(d.type==='publish'){title='Publish Final Results?';body='<p>หลัง Publish แล้วจะไม่สามารถแก้คะแนนหรือ Unlock ได้อีก การแสดงผลจะเริ่มที่ Shot 1 (Top 3) และสามารถเปลี่ยนเป็น Shot 2 ได้</p>';confirm='Publish (Demo)';warning=true;}
+    else if(d.type==='publish'){title='Publish Final Results?';body='<p>หลัง Publish แล้วจะไม่สามารถแก้คะแนนหรือ Unlock ได้อีก การแสดงผลจะเริ่มที่ Shot 1 (Top 5) และสามารถเปลี่ยนเป็น Shot 2 ได้</p>';confirm='Publish (Demo)';warning=true;}
     else if(d.type==='reset'&&LIVE.on){title='ล้างคะแนนกรรมการทั้งหมด?';body=`<p>ใช้สำหรับช่วงทดสอบ — คะแนนแบบร่างและคะแนนที่ส่งแล้วของกรรมการทุกท่าน (${JUDGE_TOTAL()} ท่าน) จะถูกล้าง, ทุกทีมจะถูกปลด Lock และยกเลิกการประกาศผล</p><p>ลำดับทีม คะแนน Demo และน้ำหนักคะแนนยังอยู่เหมือนเดิม · ระบบสำรองข้อมูลเดิมไว้ในโฟลเดอร์ data/backups ก่อนล้าง</p><div class="notice warn">${icon('warning')} ห้ามกดในวันงานจริงหลังกรรมการเริ่มให้คะแนนแล้ว</div><label class="reset-confirm"><span>พิมพ์ <strong>RESET</strong> เพื่อยืนยัน</span><input class="input" data-input="reset-confirm" autocomplete="off" autocapitalize="characters" spellcheck="false" value="${esc(state.resetConfirm||'')}" placeholder="RESET"/></label>`;confirm='ล้างคะแนน';warning=true;}
     else if(d.type==='reset'){title='รีเซ็ตข้อมูล Demo?';body='<p>คะแนน Draft, Confirmed, Lock, ตารางคะแนน และการตั้งค่าทั้งหมดในเบราว์เซอร์นี้จะถูกคืนค่าเริ่มต้น</p>';confirm='รีเซ็ต';warning=true;}
     else if(d.type==='import'){title=`ยืนยัน Import CSV (${d.rows.length} ทีม)`;body=`<p>ระบบจะเขียนทับ Demo Averages ของ ${d.rows.length} ทีมที่มีอยู่ในไฟล์ พร้อมคำนวณคะแนนใหม่</p>${LIVE.on?'':'<div class="notice">Import นี้เป็นการจำลองในเบราว์เซอร์เท่านั้น</div>'}`;confirm='ยืนยัน Import';}
@@ -475,7 +519,7 @@
     if(a==='publish'){openDialog('publish');return;}
     if(a==='preview-stage'){state.preview=!state.published;state.stageShot=1;changeScreen('stage');return;}
     if(a==='stage-shot'){state.stageShot=Number(btn.dataset.shot);save();render();return;}
-    if(a==='fullscreen'){const target=document.querySelector('.stage');if(document.fullscreenElement)document.exitFullscreen?.();else target?.requestFullscreen?.();return;}
+    if(a==='fullscreen'){const target=document.querySelector('.awards-shell,.stage');if(document.fullscreenElement)document.exitFullscreen?.();else target?.requestFullscreen?.();return;}
     if(a==='move-team'){const idx=state.teams.findIndex(t=>t.id===Number(btn.dataset.id)),next=idx+Number(btn.dataset.dir);if(next<0||next>=state.teams.length||state.published)return;[state.teams[idx],state.teams[next]]=[state.teams[next],state.teams[idx]];save();render();return;}
     if(a==='add-team'){if(state.published)return toast('ประกาศผลแล้ว ไม่สามารถเพิ่มทีมได้');const name=(state.newTeamName||'').trim();if(!name)return toast('กรุณากรอกชื่อทีม');if(state.teams.some(t=>t.name.toLowerCase()===name.toLowerCase()))return toast('มีชื่อทีมนี้แล้ว');const id=Math.max(...state.teams.map(t=>t.id))+1;state.teams.push({id,name});state.demoScores[id]=LIVE.on?{}:defaultDemo(state.teams.length-1);state.newTeamName='';save();toast('เพิ่มทีม '+name+' สำเร็จ (Demo)');return;}
     if(a==='download-csv'){generateCsv();return;}

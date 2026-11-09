@@ -2,11 +2,30 @@
 
 **KAsset AI Innovation Competition · Interactive Website Prototype (Design Journey v4)**
 
-> **สถานะ: UX / Frontend Demo — ยังไม่ใช่ระบบแข่งขันจริง**  
-> โปรเจกต์นี้เป็นต้นแบบเพื่อให้ทีมงานและผู้มีส่วนเกี่ยวข้องทดลองการให้คะแนน การควบคุมการแข่งขัน และการประกาศผล ไม่ได้เชื่อมฐานข้อมูลหรือระบบยืนยันตัวตนที่ปลอดภัย จึง **ห้ามนำไปเก็บคะแนนกรรมการหรือข้อมูลพนักงานจริง** จนกว่าจะพัฒนา Backend และผ่านการทดสอบครบถ้วน
+> **สถานะ: พร้อมใช้งานวันงาน (live server)** — กรรมการ 7 ท่านให้คะแนนผ่านลิงก์, Admin ดูความคืบหน้า, Lock และ Publish ได้จริง ข้อมูลเก็บในเครื่องที่รัน server (ไม่มีฐานข้อมูลภายนอก)
 
 **ลองดูเดโม:** [pi-champion-s2-demo.vercel.app](https://pi-champion-s2-demo.vercel.app/) (ลิงก์เว็บทดลอง อาจมีการอัปเดตแยกจากไฟล์ใน ZIP)  
-**Repository เป้าหมาย:** [Paopasatiht/CG-PI-Champion-SS2-Voting-Site](https://github.com/Paopasatiht/CG-PI-Champion-SS2-Voting-Site) (ยังไม่ได้ Push ผ่านการจัดชุดไฟล์นี้)
+**Repository:** [Paopasatiht/CG-PI-Champion-SS2-Voting-Site](https://github.com/Paopasatiht/CG-PI-Champion-SS2-Voting-Site) — **private** (มีรหัสจริงของวันงานอยู่ใน `seed/`)
+
+## เริ่มใช้บนเครื่องใหม่ใน 3 คำสั่ง (Docker)
+
+```bash
+git clone https://github.com/Paopasatiht/CG-PI-Champion-SS2-Voting-Site.git
+cd CG-PI-Champion-SS2-Voting-Site
+docker compose up -d --build
+```
+
+เปิด `http://localhost:8080` (กรรมการ) และ `http://localhost:8080/admin` (Admin) ได้เลย — ไม่ต้องตั้งค่าเพิ่ม
+
+| มาพร้อม repo | อยู่ที่ |
+|---|---|
+| ชื่อทีม 12 ทีม (ลำดับนำเสนอ), เกณฑ์ Demo Day 20% และ Pitching Day 80% | `assets/js/event-config.js` |
+| รหัสกรรมการ 7 ท่าน + รหัส Admin (ชุดเดียวกับเครื่องหลัก) | `seed/CODES.txt` (hash อยู่ที่ `seed/judges.json`) |
+| รหัสชุดเดียวกันสำหรับโหมดทดสอบแบบ artifact / เปิดไฟล์ตรง | `assets/js/access-codes.js` (hash) |
+
+ครั้งแรกที่ server เริ่ม ระบบคัดลอกรหัสจาก `seed/` เข้าโฟลเดอร์ข้อมูลเอง และไม่เขียนทับข้อมูลที่มีอยู่แล้ว
+คะแนน Demo Day (20%) ยังว่าง — กรอกในหน้า Admin → คะแนน Demo ก่อนวันงาน
+ngrok authtoken ไม่ได้อยู่ใน repo (เป็นบัญชีส่วนตัว) ถ้าต้องการลิงก์สาธารณะดูหัวข้อ ngrok ด้านล่าง
 
 ## ภาพรวมโปรเจกต์
 
@@ -16,7 +35,7 @@
 
 - กรรมการใช้มือถือ, iPad หรือ PC ให้คะแนนได้ง่าย มีสถานะ Draft / Submitted ชัดเจน
 - ผู้จัดงานดูความครบถ้วนของการประเมินและควบคุม Lock / Publish ได้
-- หน้า Results สำหรับฉายโปรเจกเตอร์ประกาศ **Top 3** ก่อน แล้วแสดงคะแนนเฉลี่ยรายเกณฑ์ครบทุกทีม
+- หน้า Results สำหรับฉายโปรเจกเตอร์ประกาศ **Top 5** ก่อน แล้วแสดงคะแนนเฉลี่ยรายเกณฑ์ครบทุกทีม
 - ภาพลักษณ์ Emerald–Gold / Ivory ที่สอดคล้องกับแนวคิดนวัตกรรม AI (รายละเอียดแบรนด์เป็น **concept** จนกว่าจะมี Asset ทางการ)
 
 ### ภาพแนวทาง UI (AI-generated design concepts)
@@ -40,7 +59,7 @@
 | **Admin Dashboard** | ดู Progress จำลอง, จัดการทีม/ลำดับ, Import/Edit Demo Scores, เปลี่ยนน้ำหนักรอบ | Admin Code เป็นรหัส Demo; ข้อมูลเก็บแค่ใน Browser |
 | **Lock / Unlock / Publish** | จำลอง Lock รายทีม, Lock All, Unlock ก่อน Publish และ Publish | มีข้อมูลกรรมการจำลอง; **ยังไม่ใช่ Server-side Lock** |
 | **Tie Review** | หน้าสาธิต UX ตรวจคะแนนเสมอ | ยังไม่ใช่กระบวนการอนุมัติ Tie-break จริง |
-| **Results Reveal** | Shot 1: Top 3; Shot 2: ตารางคะแนนพร้อมค่าเฉลี่ยแต่ละเกณฑ์ | Public Results ถูกซ่อนก่อน Publish ตามสถานะ Demo |
+| **Results Reveal** | Shot 1: Final Results · Top 5 (การ์ดทอง / เงิน / ทองแดง + อันดับ 4–5); Shot 2: ตารางคะแนนพร้อมค่าเฉลี่ยแต่ละเกณฑ์ | Public Results ถูกซ่อนก่อน Publish ตามสถานะ Demo |
 
 ## เส้นทางการใช้งาน (User Journey)
 
@@ -58,7 +77,7 @@ flowchart TD
   J --> K[Verify all submitted → Lock]
   K --> L[Review ties / Approve ranking]
   L --> M[Publish Results]
-  M --> N[Shot 1 / Top 3]
+  M --> N[Shot 1 / Top 5]
   N --> O[Shot 2 / Detailed Results]
 ```
 
@@ -88,7 +107,7 @@ flowchart TD
 3. ใช้ **เติมคะแนนจำลองให้ครบ** เพื่อทดสอบขั้นตอน Admin โดยไม่ต้องลงคะแนนทุกทีมด้วยตนเอง
 4. กด **Lock All** เมื่อสถานะครบทุกทีมใน Demo
 5. ตรวจสอบ/จำลองเงื่อนไขการประกาศผล แล้วกด **Publish Results**
-6. สลับหน้าจอ **Shot 1 — Top 3** และ **Shot 2 — Detailed Results** (รองรับการแสดงเต็มจอ)
+6. สลับหน้าจอ **Top 5** และ **Shot 2 — Detailed Results** (รองรับการแสดงเต็มจอ)
 
 > คำเตือน: การกด Submit, Lock หรือ Publish ใน Demo นี้มีผลเฉพาะข้อมูลทดสอบของเบราว์เซอร์เครื่องนั้น ไม่กระทบกรรมการ/ผู้ใช้อื่น
 
@@ -112,15 +131,15 @@ flowchart TD
 กรรมการกรอกผ่านลิงก์ → คะแนนส่งเข้า server → Admin เห็นความคืบหน้าจริง, Lock และ Publish ได้
 
 ```bash
-npm run codes          # ครั้งแรก: สร้างรหัสกรรมการ 7 ท่าน + Admin -> data/CODES-PRIVATE.txt
 npm start              # http://localhost:8080 (กรรมการ)  ·  http://localhost:8080/admin (Admin)
+                       # ครั้งแรกคัดลอกรหัสจาก seed/ -> data/CODES-PRIVATE.txt
 # หรือ Docker
 docker compose up -d --build
 ```
 
-| ไฟล์ใน `data/` (ไม่ขึ้น Git) | เก็บอะไร |
+| ไฟล์ในโฟลเดอร์ข้อมูล (`data/` หรือ Docker volume · ไม่ขึ้น Git) | เก็บอะไร |
 |---|---|
-| `CODES-PRIVATE.txt` | รหัสที่ใช้แจกกรรมการ / Admin (เก็บเป็นความลับ) |
+| `CODES-PRIVATE.txt` | รหัสที่ใช้แจกกรรมการ / Admin (คัดลอกจาก `seed/CODES.txt`) |
 | `judges.json` | รายชื่อกรรมการ + hash ของรหัส (แก้ชื่อได้ที่ช่อง `name` แล้ว restart) |
 | `event.json` | ทีม, คะแนน Demo, สัดส่วน, สถานะ Lock / Publish |
 | `scores.json` | คะแนน Draft / Confirmed ของกรรมการแต่ละท่าน |
@@ -139,7 +158,7 @@ docker compose up -d --build
 - หน้าเว็บตรวจเองว่ามี server (`/api/health`) ถ้ามีจะเป็นโหมด **LIVE** ถ้าไม่มี (artifact / เปิดไฟล์ตรง) จะเป็นโหมด Demo เหมือนเดิม
 - กรรมการต้องเปิดเครื่องที่รัน server ได้ เช่น อยู่ Wi-Fi เดียวกันแล้วใช้ `http://<IP เครื่อง Admin>:8080` (server พิมพ์ IP ให้ตอนเริ่ม) และต้องเปิด firewall พอร์ต 8080
 - ทดสอบ: `npm test` (smoke + integration test ของ server)
-- สร้างรหัสใหม่ทั้งชุด: `node server/generate-codes.mjs --force` (รหัสเดิมใช้ไม่ได้ทันที)
+- สร้างรหัสใหม่ทั้งชุด: `node server/generate-codes.mjs --force` (รหัสเดิมใช้ไม่ได้ทันที) แล้ว copy `data/judges.json` + `data/CODES-PRIVATE.txt` ไปทับ `seed/judges.json` + `seed/CODES.txt` และรัน `node tools/build-access-codes.mjs` เพื่อให้เครื่องอื่นได้ชุดใหม่ด้วย
 
 ## Deploy ด้วย Docker (ready to deploy)
 
@@ -157,11 +176,13 @@ docker compose up -d
 docker compose logs -f
 ```
 
-- รหัสอยู่ที่ `./data/CODES-PRIVATE.txt` ถ้า `./data` มีรหัสอยู่แล้ว (เช่นชุด 7 ท่านที่สร้างไว้) จะใช้ชุดเดิม ไม่สร้างใหม่
+- รหัสมาจาก `seed/CODES.txt` และถูกคัดลอกเข้า volume ตอนเริ่มครั้งแรก
+- ข้อมูล (คะแนน, audit log, backups) อยู่ใน Docker volume ชื่อ `pi-champion-data` จึงเขียนได้ทุกเครื่อง ทั้ง Windows / macOS / Linux
 - ตั้งค่าใน `.env` (ดู `.env.example`): `PORT`, `PUBLIC_URL` (ลิงก์ที่จะแจกกรรมการ), `JUDGES`
 - Container รันแบบ non-root, read-only filesystem, ตัด Linux capabilities ทั้งหมด, มี healthcheck และ restart อัตโนมัติ
-- สำรองข้อมูล: copy โฟลเดอร์ `./data` (คะแนน, รหัส, audit log)
-- อัปเดตโค้ด: `docker compose up -d --build` (ข้อมูลใน `./data` ไม่หาย)
+- สำรองข้อมูล: `docker compose cp pi-champion:/app/data ./data-backup`
+- อัปเดตโค้ด: `git pull && docker compose up -d --build` (คะแนนใน volume ไม่หาย)
+- ล้างทุกอย่างแล้วเริ่มใหม่ (คะแนนหายหมด รหัสกลับมาจาก seed): `docker compose down -v && docker compose up -d`
 
 ## แชร์ลิงก์สาธารณะชั่วคราว (ngrok)
 

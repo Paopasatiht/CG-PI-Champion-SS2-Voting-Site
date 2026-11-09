@@ -1,0 +1,51 @@
+{
+  "createdAt": "2026-11-09T04:11:48.697Z",
+  "judges": [
+    {
+      "id": "J1",
+      "name": "กรรมการ 1",
+      "salt": "a986f79c00338f3e5d34a74e7ec503ba",
+      "hash": "de1e42b2bb5c6eb3d23ee5c69fee66b2269627a6133d8ca22a4700b8cc1ccd22"
+    },
+    {
+      "id": "J2",
+      "name": "กรรมการ 2",
+      "salt": "44058539b1f46fafa49ced1ab65f4bf9",
+      "hash": "85ee78b84171ffefcb95038dc723f612f3794a2163851001d01c890298ca69fd"
+    },
+    {
+      "id": "J3",
+      "name": "กรรมการ 3",
+      "salt": "fb191f7d4e265c4dfc675ae3ba85a927",
+      "hash": "3172a9f4b53e1edc25669a8118648a4e34f8da2e31be7cef4d6e75140c6095ad"
+    },
+    {
+      "id": "J4",
+      "name": "กรรมการ 4",
+      "salt": "0a1551c8cb937982882ddd2eb254cb78",
+      "hash": "b2c464c7bda5d3d89d9c845baa1703974a6c67e86a39b53fcd71f7f02072d895"
+    },
+    {
+      "id": "J5",
+      "name": "กรรมการ 5",
+      "salt": "6f97aa99dab82b493b06c188c9a94518",
+      "hash": "2f485370b7363e0c4b3f5140553d97b2f2b19dd3833111dc59dbf1eaddcf9bbe"
+    },
+    {
+      "id": "J6",
+      "name": "กรรมการ 6",
+      "salt": "713775845f5eb42095210d21a96d8dac",
+      "hash": "33e335120e117ee2bab96d82943e96c0cd30b63eb3c2e8bc28b17ac2bf2e4fae"
+    },
+    {
+      "id": "J7",
+      "name": "กรรมการ 7",
+      "salt": "d3afc4fc9dd73defddfe2c85e6fdf0fa",
+      "hash": "520b6b605bb3514ad77bd999df934b3d5091b1bc89d4f3ddfe9134165f378764"
+    }
+  ],
+  "admin": {
+    "salt": "853f8c9dfa72e9f7b044368ccee8e194",
+    "hash": "1bc2cd6bf747fc361a20f34fcffc1d94e37c75afac46b486e5a1534329c0a333"
+  }
+}

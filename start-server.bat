@@ -10,7 +10,6 @@ if errorlevel 1 (
   pause
   exit /b 1
 )
-if not exist "data\judges.json" node server\generate-codes.mjs
 echo.
 echo  PI Champion Season 2 - Live server
 echo  Keep this window open during the event. Closing it stops scoring.

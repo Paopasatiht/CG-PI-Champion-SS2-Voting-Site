@@ -3,7 +3,7 @@
 // and a small JSON API. Data lives in DATA_DIR as JSON files (atomic writes).
 //
 //   node server/server.mjs            # PORT=8080, DATA_DIR=./data
-//   node server/generate-codes.mjs    # create judge/admin codes first
+// First start copies the login codes from seed/ into DATA_DIR (or generates new ones if seed/ is missing).
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -11,6 +11,7 @@ import crypto from 'node:crypto';
 import vm from 'node:vm';
 import os from 'node:os';
 import { fileURLToPath } from 'node:url';
+import { spawnSync } from 'node:child_process';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DATA_DIR = path.resolve(process.env.DATA_DIR || path.join(ROOT, 'data'));
@@ -44,6 +45,20 @@ function audit(entry) {
 }
 
 fs.mkdirSync(DATA_DIR, { recursive: true });
+// First start on a new machine: take the event's login codes from seed/ (committed to the
+// private repo) so every install uses the same judge/admin codes. Never overwrites existing data.
+// No seed → generate a fresh set of codes.
+if (!fs.existsSync(file('judges.json'))) {
+  const seedDir = path.join(ROOT, 'seed');
+  if (fs.existsSync(path.join(seedDir, 'judges.json'))) {
+    fs.copyFileSync(path.join(seedDir, 'judges.json'), file('judges.json'));
+    if (fs.existsSync(path.join(seedDir, 'CODES.txt'))) fs.copyFileSync(path.join(seedDir, 'CODES.txt'), file('CODES-PRIVATE.txt'));
+    console.log(`Login codes copied from seed/ into ${DATA_DIR} (see CODES-PRIVATE.txt)`);
+  } else {
+    const r = spawnSync(process.execPath, [path.join(ROOT, 'server', 'generate-codes.mjs')], { stdio: 'inherit', env: { ...process.env, DATA_DIR } });
+    if (r.status !== 0) process.exit(1);
+  }
+}
 const credentials = readJson('judges.json', null);
 if (!credentials || !Array.isArray(credentials.judges) || !credentials.admin) {
   console.error(`No codes found in ${file('judges.json')}. Run: node server/generate-codes.mjs`);

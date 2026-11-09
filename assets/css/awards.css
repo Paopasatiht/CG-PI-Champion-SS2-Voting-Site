@@ -1,0 +1,180 @@
+/* ==========================================================================
+   Final Results · Top 5 award stage (admin "ประกาศผล" → Top 5)
+   Deep Emerald + Mint + Ivory, with Gold / Platinum Silver / Copper for ranks 1–3.
+   Sizes use container units (cqi) of .awards-shell, so the stage keeps the same
+   proportions inside the page and in fullscreen.
+   Component parts: header · award card · rank pennant · award label · team name ·
+   divider · score block · stage footer.
+   ========================================================================== */
+.awards-shell{
+  --aw-emerald:#063F35; --aw-emerald-2:#0A5442; --aw-emerald-3:#0E6A52;
+  --aw-mint:#D9F0E5; --aw-mint-2:#A9E2C8; --aw-ivory:#F6F5F0;
+  --aw-gold:#E7C46A; --aw-gold-hi:#F8E3A0; --aw-gold-lo:#B98B32;
+  --aw-silver:#DDE2E6; --aw-silver-hi:#F7F8F9; --aw-silver-lo:#9AA3AB;
+  --aw-copper:#D8875A; --aw-copper-hi:#F4B48A; --aw-copper-lo:#A4542F;
+  --aw-sage:#8DB49A; --aw-sage-lo:#5E8A6E; --aw-sage-line:rgba(169,205,182,.42);
+  --aw-name:#FBF7EC; --aw-on-pennant:#0B3B2E;
+  --aw-radius:clamp(14px,1.6cqi,28px);
+  container-type:inline-size; position:relative; border-radius:27px; overflow:hidden;
+  box-shadow:0 24px 60px rgba(4,40,32,.28);
+}
+.awards-stage{
+  position:relative; isolation:isolate; overflow:hidden; color:var(--aw-ivory);
+  min-height:56.25cqi; /* 16:9 on desktop, grows if names wrap */
+  display:flex; flex-direction:column; align-items:center;
+  padding:2.3cqi 3.2cqi 0;
+  /* emerald-stage.webp already carries the two corner ribbons (decorative, CSS background = no alt needed) */
+  background:#064A3A url(../img/awards/emerald-stage.webp) center/cover no-repeat;
+  font-family:var(--font-ui);
+}
+
+/* Header */
+.awards-header{position:relative; width:100%; display:flex; flex-direction:column; align-items:center; text-align:center; margin-bottom:1.7cqi}
+.awards-kicker{position:absolute; left:0; top:.5cqi; margin:0; display:flex; align-items:center; gap:.9cqi;
+  font:700 clamp(.66rem,1.02cqi,1.15rem)/1 var(--font-ui); letter-spacing:.14em; color:var(--aw-ivory)}
+.awards-kicker::before{content:""; width:3px; height:1.15em; border-radius:2px; background:var(--aw-gold)}
+.awards-badge{position:absolute; right:0; top:0; padding:.55cqi 1.35cqi; border-radius:999px;
+  background:var(--aw-mint); color:var(--aw-emerald); font:800 clamp(.62rem,.88cqi,1rem)/1.1 var(--font-ui); letter-spacing:.12em;
+  box-shadow:0 0 0 1px rgba(255,255,255,.4), 0 6px 18px rgba(0,0,0,.18)}
+.awards-title{margin:0; font:800 clamp(2.1rem,4.35cqi,5.4rem)/1.05 var(--font-ui); letter-spacing:-.02em;
+  color:var(--aw-mint); background:linear-gradient(180deg,#F1FBF6 0%,#C7EEDB 55%,#9FDDBF 100%);
+  -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 .35cqi .9cqi rgba(0,0,0,.28))}
+.awards-top-tag{margin-top:.7cqi; padding:.35cqi 2cqi; border-radius:999px; border:2px solid #E8D79E;
+  background:rgba(4,48,38,.55); color:var(--aw-ivory); font:800 clamp(.72rem,1.2cqi,1.35rem)/1.2 var(--font-ui); letter-spacing:.2em;
+  box-shadow:0 0 1.2cqi rgba(232,215,158,.18)}
+
+/* Rows */
+.awards-podium,.awards-finalists{list-style:none; margin:0; padding:0; display:grid; position:relative; z-index:1}
+/* all three stretch to the row height; the offsets keep 1 > 2 > 3 and a shared bottom edge whatever the name length */
+.awards-podium{width:80%; grid-template-columns:1fr 1.17fr 1fr; gap:1.15cqi; align-items:stretch}
+.awards-podium .award-slot-1{grid-column:2; grid-row:1}
+.awards-podium .award-slot-2{grid-column:1; grid-row:1}
+.awards-podium .award-slot-3{grid-column:3; grid-row:1}
+.awards-finalists{--n:2; width:calc(26.5% * var(--n)); grid-template-columns:repeat(var(--n),1fr); gap:2.45cqi; margin-top:2.4cqi}
+
+/* Award card */
+.award-card{position:relative; isolation:isolate; overflow:hidden; display:flex; flex-direction:column; align-items:center; text-align:center;
+  border-radius:var(--aw-radius); background:linear-gradient(180deg,#0A5442 0%,#074536 100%);
+  border:2px solid var(--aw-line,rgba(255,255,255,.3)); padding:0 1.6cqi 1.5cqi; min-width:0}
+.award-sheen{position:absolute; z-index:-1; inset:0 0 auto; height:56%; background-size:100% 100%; background-position:center top; pointer-events:none;
+  -webkit-mask-image:linear-gradient(180deg,#000 0%,#000 38%,transparent 100%); mask-image:linear-gradient(180deg,#000 0%,#000 38%,transparent 100%)}
+.award-card::after{content:""; position:absolute; z-index:-1; inset:0; border-radius:inherit; pointer-events:none;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.28), inset 0 -2.2cqi 3cqi rgba(3,35,28,.35)}
+
+/* Rank pennant (swallowtail ribbon) */
+.rank-pennant{display:grid; place-items:start center; width:4.6cqi; min-width:44px; height:4.4cqi; min-height:42px; padding-top:.55cqi;
+  clip-path:polygon(0 0,100% 0,100% 100%,50% 80%,0 100%);
+  background:linear-gradient(180deg,var(--aw-pen-hi) 0%,var(--aw-pen) 55%,var(--aw-pen-lo) 100%); color:var(--aw-on-pennant);
+  font:800 clamp(1rem,2.15cqi,2.4rem)/1 var(--font-ui); letter-spacing:.01em; filter:drop-shadow(0 .25cqi .4cqi rgba(0,0,0,.3)); flex:none}
+.award-label{margin-top:.95cqi; font:700 clamp(.66rem,1.12cqi,1.25rem)/1.2 var(--font-ui); letter-spacing:.19em; color:var(--aw-label,var(--aw-ivory));
+  text-shadow:0 1px 6px rgba(0,0,0,.35)}
+.award-team{margin:.8cqi 0 0; color:var(--aw-name); font-weight:800; line-height:1.05; letter-spacing:-.015em;
+  text-wrap:balance; overflow-wrap:anywhere; hyphens:auto; max-width:100%;
+  text-shadow:0 .2cqi .9cqi rgba(0,0,0,.45), 0 0 1px rgba(0,0,0,.3)}
+.award-divider{display:block; width:62%; height:2px; margin:0; border-radius:2px; background:var(--aw-rule,rgba(255,255,255,.5)); flex:none}
+.award-score{margin:1cqi 0 0; font:600 clamp(1.05rem,1.75cqi,2rem)/1 var(--font-ui); color:var(--aw-ivory); white-space:nowrap}
+.award-score strong{font-weight:700}
+.award-score span{opacity:.92}
+.award-score-label{margin-top:.75cqi; font:700 clamp(.56rem,.8cqi,.95rem)/1 var(--font-ui); letter-spacing:.24em; color:rgba(246,245,240,.86)}
+/* Team name is centred in whatever height the card has between label and divider */
+.award-team{margin-block:auto; padding-block:.55cqi 1.05cqi}
+
+/* Top 3 sizes (shared baseline: podium uses align-items:end) */
+.awards-podium .award-card{padding-top:0}
+.awards-podium .award-slot-2{margin-top:1cqi}
+.awards-podium .award-slot-3{margin-top:1.4cqi}
+.awards-podium .award-slot-1{min-height:19.7cqi}
+.award-team--xl{font-size:clamp(1.6rem,3.1cqi,3.6rem)}
+.award-team--lg{font-size:clamp(1.4rem,2.75cqi,3.2rem)}
+.award-team--md{font-size:clamp(1.25rem,2.4cqi,2.8rem)}
+.award-slot-1 .award-team--xl{font-size:clamp(2.2rem,4.9cqi,5.8rem)}
+.award-slot-1 .award-team--lg{font-size:clamp(1.8rem,3.6cqi,4.2rem)}
+.award-slot-1 .award-team--md{font-size:clamp(1.5rem,3cqi,3.5rem)}
+.award-slot-1 .rank-pennant{width:5.1cqi; height:4.75cqi; font-size:clamp(1.15rem,2.45cqi,2.8rem)}
+.award-slot-1 .award-label{letter-spacing:.22em; font-size:clamp(.72rem,1.3cqi,1.45rem)}
+
+/* Gold · Champagne */
+.award-card--gold{--aw-line:var(--aw-gold); --aw-rule:var(--aw-gold); --aw-label:#F6D985;
+  --aw-pen-hi:var(--aw-gold-hi); --aw-pen:var(--aw-gold); --aw-pen-lo:var(--aw-gold-lo);
+  border-width:3px; box-shadow:0 0 0 1px rgba(255,236,170,.35), 0 0 2.2cqi rgba(231,196,106,.38), 0 1.6cqi 3cqi rgba(0,0,0,.28)}
+.award-card--gold .award-sheen{background-image:url(../img/awards/gold-sheen.webp); opacity:.92}
+.award-card--gold .award-label,.award-card--copper .award-label{text-shadow:0 1px 2px rgba(40,25,0,.7),0 0 10px rgba(20,40,30,.55)}
+/* Platinum silver · keep the top neutral grey, no blend modes */
+.award-card--silver{--aw-line:var(--aw-silver); --aw-rule:#EEF1F3; --aw-label:var(--aw-silver-hi);
+  --aw-pen-hi:var(--aw-silver-hi); --aw-pen:#CBD1D6; --aw-pen-lo:var(--aw-silver-lo);
+  border-width:3px; background:linear-gradient(180deg,#24453D 0%,#0C4B3B 45%,#074536 100%);
+  box-shadow:0 0 0 1px rgba(255,255,255,.35), 0 0 1.8cqi rgba(225,230,235,.28), 0 1.6cqi 3cqi rgba(0,0,0,.28)}
+.award-card--silver .award-sheen{background-image:url(../img/awards/silver-sheen.webp); filter:brightness(.86) contrast(1.12)}
+/* Copper · warmer and a little dimmer than silver */
+.award-card--copper{--aw-line:var(--aw-copper); --aw-rule:var(--aw-copper); --aw-label:#F2A86E;
+  --aw-pen-hi:var(--aw-copper-hi); --aw-pen:var(--aw-copper); --aw-pen-lo:var(--aw-copper-lo);
+  box-shadow:0 0 0 1px rgba(240,170,120,.28), 0 0 1.6cqi rgba(216,135,90,.28), 0 1.6cqi 3cqi rgba(0,0,0,.28)}
+.award-card--copper .award-sheen{background-image:url(../img/awards/copper-sheen.webp); opacity:.82}
+/* Ranks 4–5 · muted finalists, flat emerald */
+.award-card--finalist{--aw-line:var(--aw-sage-line); --aw-rule:var(--aw-sage-line); --aw-label:#B3CFBC;
+  --aw-pen-hi:#A6C8B0; --aw-pen:var(--aw-sage); --aw-pen-lo:var(--aw-sage-lo);
+  border-width:1.5px; background:rgba(8,74,58,.72); min-height:14cqi; box-shadow:0 1cqi 2.4cqi rgba(0,0,0,.18)}
+.award-card--finalist .award-sheen{display:none}
+.award-card--finalist .rank-pennant{width:3.5cqi; height:3.2cqi; min-width:38px; min-height:34px; padding-top:.35cqi; font-size:clamp(.9rem,1.65cqi,1.9rem)}
+.award-card--finalist .award-label{margin-top:.95cqi; font-size:clamp(.62rem,1cqi,1.1rem)}
+.award-card--finalist .award-team{font-size:clamp(1.15rem,2.1cqi,2.5rem); color:#F4EEDD}
+.award-card--finalist .award-divider{width:55%; height:1.5px}
+.award-card.is-placeholder .award-team{opacity:.55; font-weight:700}
+
+/* Footer: thin light line under the cards + status note */
+.awards-footer{position:relative; width:100%; margin-top:auto; padding:2cqi 0 1.5cqi; text-align:center}
+.awards-floor{display:block; height:2px; width:100%; margin-bottom:1.9cqi;
+  background:linear-gradient(90deg,transparent 0%,rgba(232,215,158,.15) 12%,rgba(246,226,160,.95) 50%,rgba(232,215,158,.15) 88%,transparent 100%);
+  box-shadow:0 0 1.2cqi rgba(240,214,140,.55), 0 -1.4cqi 3cqi rgba(160,220,150,.12)}
+.awards-floor{margin-bottom:1.3cqi}
+.awards-footer p{margin:0; font:500 clamp(.78rem,1.1cqi,1.25rem)/1.4 var(--font-ui); color:rgba(246,245,240,.92)}
+
+/* Fullscreen: fill the screen, keep proportions */
+.awards-shell:fullscreen{border-radius:0; overflow:auto; background:#064636}
+.awards-shell:fullscreen .awards-stage{width:100%; min-height:100vh}
+
+/* Tablet: podium uses full width, finalists a little wider */
+@container (max-width: 980px){
+  .awards-stage{padding:3.4cqi 3.4cqi 0}
+  .awards-header{margin-bottom:3cqi; padding-top:5cqi}
+  .awards-kicker{top:0}
+  .awards-podium{width:100%; gap:1.6cqi}
+  .awards-finalists{width:min(100%,calc(36% * var(--n))); gap:2.4cqi}
+  .award-card{padding:0 1.8cqi 2.2cqi}
+  .award-label{letter-spacing:.14em}
+  .award-score-label{letter-spacing:.16em}
+}
+/* Mobile: one column, reading order 1 → 2 → 3 → 4 → 5 (same as the DOM) */
+@container (max-width: 600px){
+  .awards-stage{min-height:0; padding:18px 16px 0}
+  .awards-stage{background-size:auto 100%; background-position:18% top}
+  .awards-header{padding-top:0; margin-bottom:22px; gap:10px}
+  .awards-kicker,.awards-badge{position:static}
+  .awards-kicker{justify-content:center; font-size:.68rem; letter-spacing:.12em}
+  .awards-badge{order:-1; font-size:.64rem; padding:5px 12px}
+  .awards-title{font-size:2.3rem}
+  .awards-top-tag{margin-top:0; font-size:.78rem; padding:4px 16px}
+  .awards-podium,.awards-finalists{width:100%; grid-template-columns:1fr; gap:14px}
+  .awards-podium .award-slot-1,.awards-podium .award-slot-2,.awards-podium .award-slot-3{grid-column:1; grid-row:auto}
+  .awards-finalists{margin-top:14px}
+  .award-card,.awards-podium .award-card,.award-card--finalist,.awards-podium .award-slot-1{min-height:0; padding:0 18px 18px}
+  .awards-podium .award-slot-2,.awards-podium .award-slot-3{margin-top:0}
+  .award-sheen{height:58%}
+  .rank-pennant,.award-slot-1 .rank-pennant{width:52px; height:48px; padding-top:7px; font-size:1.35rem}
+  .award-card--finalist .rank-pennant{width:44px; height:40px; padding-top:6px; font-size:1.1rem}
+  .award-label,.award-slot-1 .award-label,.award-card--finalist .award-label{margin-top:10px; font-size:.72rem; letter-spacing:.16em}
+  .award-team,.award-team--xl,.award-team--lg,.award-team--md{font-size:1.6rem; padding-block:8px 14px}
+  .award-slot-1 .award-team--xl,.award-slot-1 .award-team--lg,.award-slot-1 .award-team--md{font-size:2.15rem}
+  .award-card--finalist .award-team,.award-card--finalist .award-team--md{font-size:1.35rem}
+  .award-score{margin-top:12px; font-size:1.2rem}
+  .award-score-label{margin-top:7px; font-size:.62rem; letter-spacing:.18em}
+  .awards-footer{padding:26px 0 18px}
+  .awards-floor{margin-bottom:14px}
+  .awards-footer p{font-size:.78rem}
+}
+@media (prefers-reduced-motion:no-preference){
+  .award-card{animation:award-in .5s ease-out both}
+  .award-slot-2{animation-delay:.08s} .award-slot-3{animation-delay:.16s} .award-slot-4{animation-delay:.24s} .award-slot-5{animation-delay:.3s}
+}
+@keyframes award-in{from{opacity:0; transform:translateY(10px)}to{opacity:1; transform:none}}

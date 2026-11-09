@@ -135,3 +135,24 @@ test('admin reset-scores: needs RESET, backs up, clears scores, unlocks, unpubli
   assert.equal((await call('PUT', '/api/judge/scores', { teamId: 1, draft: full(6), submit: true }, judge)).status, 200);
   assert.match(fs.readFileSync(path.join(dataDir, 'audit.log'), 'utf8'), /scores_reset/);
 });
+
+test('fresh data dir: login codes come from seed/ and work', async () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'pi-s2-seed-'));
+  const p2 = 20000 + Math.floor(Math.random() * 2000);
+  const child = spawn(process.execPath, [path.join(root, 'server/server.mjs')], { env: { ...process.env, DATA_DIR: dir, PORT: String(p2), HOST: '127.0.0.1' }, stdio: 'pipe' });
+  try {
+    let ok = false;
+    for (let i = 0; i < 50 && !ok; i++) { try { ok = (await fetch(`http://127.0.0.1:${p2}/api/health`)).ok; } catch {} if (!ok) await new Promise(r => setTimeout(r, 100)); }
+    assert.ok(ok, 'server started');
+    assert.equal(fs.readFileSync(path.join(dir, 'judges.json'), 'utf8'), fs.readFileSync(path.join(root, 'seed/judges.json'), 'utf8'));
+    const txt = fs.readFileSync(path.join(dir, 'CODES-PRIVATE.txt'), 'utf8');
+    const judge = /\tJ1\t(PI-[A-Z0-9]+)/.exec(txt)[1], admin = /Admin\t-\t(\S+)/.exec(txt)[1];
+    for (const [role, code] of [['judge', judge], ['admin', admin]]) {
+      const r = await fetch(`http://127.0.0.1:${p2}/api/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ role, code }) });
+      assert.equal(r.status, 200, `${role} seed code logs in`);
+    }
+    const ev = JSON.parse(fs.readFileSync(path.join(dir, 'event.json'), 'utf8'));
+    assert.equal(ev.teams.length, 12);
+    assert.equal(ev.teams[9].name, 'PANDA');
+  } finally { child.kill(); fs.rmSync(dir, { recursive: true, force: true }); }
+});
