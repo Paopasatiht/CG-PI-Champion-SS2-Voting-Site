@@ -15,3 +15,6 @@ Thumbs.db
 
 # Live server data: codes, scores, sessions, audit log (never commit)
 data/
+
+# Hashed login codes for the static/artifact build (generated)
+assets/js/access-codes.js

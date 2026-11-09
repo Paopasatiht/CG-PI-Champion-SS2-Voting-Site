@@ -12,6 +12,8 @@ def css(m):
     return '<style>\n' + (root / m.group(1)).read_text(encoding='utf-8') + '\n</style>'
 
 def js(m):
+    if m.group(1).endswith('access-codes.js'):
+        return ''  # issued codes never go into the committed single file
     src = (root / m.group(1)).read_text(encoding='utf-8').replace('./assets/img/kasset-logo.webp', logo)
     return '<script>\n' + src + '\n</script>'
 
