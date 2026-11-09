@@ -5,8 +5,8 @@ The latest stakeholder feedback **supersedes the earlier slider proposal** in ev
 ## New scoring interaction
 
 - Show visibly selectable score buttons **1, 2, 3, ... 10** for each criterion.
-- Provide a separate **0** button. This is a valid score and not equivalent to `null`/missing.
-- Provide a clearly labeled **+0.5** half-point control. When a whole score `n` is selected, this chooses `n+0.5` (where `n < 10`); toggling it off returns to `n`. 0.5 must also be possible.
+- **No 0 button** on the judge scoring page (removed per product owner, 2026-11-09). Judges pick 1–10, optionally +0.5. Validation still accepts 0 so imported/legacy data is not rejected.
+- Provide a clearly labeled **+0.5** half-point control. When a whole score `n` is selected, this chooses `n+0.5` (where `n < 10`); toggling it off returns to `n`.
 - On narrow iPhones wrap buttons into **two rows of five** so hit targets remain accessible. Use ten columns on wide screens when possible.
 - Highlight the **whole-number base button and the half-toggle** when the score is fractional (for example, an 8.5 value highlights `8` and `+0.5`, never `9`). Show the precise numeric score separately.
 - Initial state is **unset** (`null`) and displays `— / 10`. Do not preselect a value.

@@ -1,4 +1,4 @@
-> LATEST OVERRIDE: See `SPEC_DELTA.md`; button grid 1–10, plus 0 and +0.5, replaces sliders on every device.
+> LATEST OVERRIDE: See `SPEC_DELTA.md`; button grid 1–10 plus +0.5 (no 0 button), replaces sliders on every device.
 
 # Coding Agent Guide — PI Champion Season 2
 
