@@ -1,0 +1,14 @@
+# Local secrets and build artifacts
+.env
+.env.*
+!.env.example
+.vercel/
+node_modules/
+dist/
+build/
+coverage/
+playwright-report/
+test-results/
+.DS_Store
+Thumbs.db
+*.log

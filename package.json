@@ -1,0 +1,13 @@
+{
+  "name": "cg-pi-champion-ss2-voting-site",
+  "version": "0.4.0",
+  "private": true,
+  "description": "KAsset PI Champion Season 2 frontend UX prototype; browser-only simulated scoring",
+  "type": "module",
+  "scripts": {
+    "test": "node tests/smoke.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
