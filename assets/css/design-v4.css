@@ -242,3 +242,6 @@ html[data-live="1"] .access-hint{display:none!important}
 .access-actions>.btn:only-child{grid-column:1/-1}
 .judge-whoami{display:inline-flex;align-items:center;gap:7px;margin-top:8px;padding:5px 12px;border-radius:999px;background:#e8f5df;color:#0b6b3a;font-weight:700;font-size:.85rem}
 .judge-whoami .icon{width:16px;height:16px}
+html[data-real="1"] [data-action="simulate"],
+html[data-real="1"] [data-action="fill-code"],
+html[data-real="1"] .access-hint{display:none!important}
