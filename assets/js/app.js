@@ -142,6 +142,15 @@
       state.dialog=null;changeScreen('judgeDashboard');toast(d.isEdit?'บันทึกการแก้ไขคะแนนแล้ว':'ส่งคะแนนเรียบร้อยแล้ว');
     }catch(e){state.dialog=null;toast(e.message);try{await liveRefresh();render();}catch(_){}}
   }
+  async function liveResetScores(){
+    if((state.resetConfirm||'').trim().toUpperCase()!=='RESET')return toast('พิมพ์ RESET เพื่อยืนยัน');
+    clearTimeout(LIVE.pushTimer);LIVE.pushTimer=null;
+    try{
+      const d=await apiCall('POST','/api/admin/reset-scores',{confirm:'RESET'});
+      applyAdmin(d);state.resetConfirm='';state.preview=false;state.dialog=null;changeScreen('admin');
+      toast(`ล้างคะแนนกรรมการแล้ว (${d.cleared} รายการ) · ปลด Lock ทุกทีม · สำรองไว้ที่ data/${d.backup}`);
+    }catch(e){state.dialog=null;toast(e.message);try{applyAdmin(await apiCall('GET','/api/admin/state'));}catch(_){} render();}
+  }
   function queueAdminPush(){
     if(!LIVE.on||APP!=='admin'||!authed())return;
     if(eventKeyOf(state)===LIVE.eventKey)return;
@@ -238,7 +247,8 @@
     const d=state.dialog;if(!d)return;
     if(LIVE.on&&d.type==='submit'){liveSubmit(d);return;}
     if(REAL()&&d.type==='simulate'){state.dialog=null;return toast('ปิดการเติมคะแนนจำลองเมื่อใช้รหัสจริง');}
-    if(LIVE.on&&(d.type==='simulate'||d.type==='reset')){state.dialog=null;return toast('ปิดฟังก์ชันนี้ในระบบจริง');}
+    if(LIVE.on&&d.type==='reset'){liveResetScores();return;}
+    if(LIVE.on&&d.type==='simulate'){state.dialog=null;return toast('ปิดฟังก์ชันนี้ในระบบจริง');}
     switch(d.type){
       case 'submit': {
         const r=record(d.teamId);if(myTotal(r.draft)===null)return toast('กรุณากรอกคะแนนทุกเกณฑ์ก่อนยืนยัน');
@@ -370,7 +380,7 @@
   function admin(){
     const completed=state.teams.filter(t=>allowedToLock(t.id)).length;
     const tabs=[['overview','ภาพรวม'],['teams','ทีมและลำดับ'],['demo','คะแนน Demo'],['weights','เกณฑ์และน้ำหนัก'],['tie','ตรวจคะแนนเสมอ']];
-    return `${pageHead({title:'ควบคุมการแข่งขัน',sub:LIVE.on?'คะแนนจริงจากกรรมการ อัปเดตอัตโนมัติทุก 3 วินาที':ACCESS()?'โหมดทดสอบ: นับเฉพาะคะแนนที่กรอกบนเบราว์เซอร์นี้ ยังไม่เชื่อม server':'ข้อมูลทดสอบ ไม่ใช่กรรมการจริง',actions:`<button class="btn outline small" data-action="reset">${icon('reset')} Reset Demo</button>`})}${summaryBar({label:state.published?'ประกาศผลแล้ว · Lock':'Lock แล้ว',done:state.locked.length,total:state.teams.length,detail:`กรรมการส่งครบ ${completed} ทีม · กรรมการ ${JUDGE_TOTAL()} ท่าน · Demo ${state.demoWeight}% / Final ${100-state.demoWeight}%`})}${tabsRow(tabs,state.adminTab,'admin-tab','tab')}${state.adminTab==='overview'?adminOverview():state.adminTab==='teams'?adminTeams():state.adminTab==='demo'?adminDemo():state.adminTab==='tie'?adminTieReview():adminWeights()}`;
+    return `${pageHead({title:'ควบคุมการแข่งขัน',sub:LIVE.on?'คะแนนจริงจากกรรมการ อัปเดตอัตโนมัติทุก 3 วินาที':ACCESS()?'โหมดทดสอบ: นับเฉพาะคะแนนที่กรอกบนเบราว์เซอร์นี้ ยังไม่เชื่อม server':'ข้อมูลทดสอบ ไม่ใช่กรรมการจริง',actions:`<button class="btn outline small" data-action="reset">${icon('reset')} ${LIVE.on?'Reset คะแนน':'Reset Demo'}</button>`})}${summaryBar({label:state.published?'ประกาศผลแล้ว · Lock':'Lock แล้ว',done:state.locked.length,total:state.teams.length,detail:`กรรมการส่งครบ ${completed} ทีม · กรรมการ ${JUDGE_TOTAL()} ท่าน · Demo ${state.demoWeight}% / Final ${100-state.demoWeight}%`})}${tabsRow(tabs,state.adminTab,'admin-tab','tab')}${state.adminTab==='overview'?adminOverview():state.adminTab==='teams'?adminTeams():state.adminTab==='demo'?adminDemo():state.adminTab==='tie'?adminTieReview():adminWeights()}`;
   }
   function adminOverview(){
     const allReady=state.teams.every(t=>allowedToLock(t.id));const allLocked=state.teams.every(t=>state.locked.includes(t.id));
@@ -407,9 +417,10 @@
     else if(d.type==='unlockTeam'){title='Confirm Unlock Team';body='<p>Unlock ทีมนี้เพื่อให้กรรมการกลับมาแก้คะแนนได้ก่อน Publish</p>';confirm='Confirm Unlock';}
     else if(d.type==='lockAll'){title='Confirm Lock All';body='<p>ปิดการให้คะแนนของทุกทีมพร้อมกัน หลังจากกรรมการทั้งหมด Submit ครบแล้ว</p>';confirm='Lock All';}
     else if(d.type==='publish'){title='Publish Final Results?';body='<p>หลัง Publish แล้วจะไม่สามารถแก้คะแนนหรือ Unlock ได้อีก การแสดงผลจะเริ่มที่ Shot 1 (Top 3) และสามารถเปลี่ยนเป็น Shot 2 ได้</p>';confirm='Publish (Demo)';warning=true;}
+    else if(d.type==='reset'&&LIVE.on){title='ล้างคะแนนกรรมการทั้งหมด?';body=`<p>ใช้สำหรับช่วงทดสอบ — คะแนนแบบร่างและคะแนนที่ส่งแล้วของกรรมการทุกท่าน (${JUDGE_TOTAL()} ท่าน) จะถูกล้าง, ทุกทีมจะถูกปลด Lock และยกเลิกการประกาศผล</p><p>ลำดับทีม คะแนน Demo และน้ำหนักคะแนนยังอยู่เหมือนเดิม · ระบบสำรองข้อมูลเดิมไว้ในโฟลเดอร์ data/backups ก่อนล้าง</p><div class="notice warn">${icon('warning')} ห้ามกดในวันงานจริงหลังกรรมการเริ่มให้คะแนนแล้ว</div><label class="reset-confirm"><span>พิมพ์ <strong>RESET</strong> เพื่อยืนยัน</span><input class="input" data-input="reset-confirm" autocomplete="off" autocapitalize="characters" spellcheck="false" value="${esc(state.resetConfirm||'')}" placeholder="RESET"/></label>`;confirm='ล้างคะแนน';warning=true;}
     else if(d.type==='reset'){title='รีเซ็ตข้อมูล Demo?';body='<p>คะแนน Draft, Confirmed, Lock, ตารางคะแนน และการตั้งค่าทั้งหมดในเบราว์เซอร์นี้จะถูกคืนค่าเริ่มต้น</p>';confirm='รีเซ็ต';warning=true;}
     else if(d.type==='import'){title=`ยืนยัน Import CSV (${d.rows.length} ทีม)`;body=`<p>ระบบจะเขียนทับ Demo Averages ของ ${d.rows.length} ทีมที่มีอยู่ในไฟล์ พร้อมคำนวณคะแนนใหม่</p>${LIVE.on?'':'<div class="notice">Import นี้เป็นการจำลองในเบราว์เซอร์เท่านั้น</div>'}`;confirm='ยืนยัน Import';}
-    return `<div class="modal-backdrop" role="presentation" data-action="dismiss-backdrop"><div class="modal" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="dialog-title"><div class="kicker">PI CHAMPION · ${warning?'IMPORTANT ACTION':'CONFIRMATION'}</div><h2 id="dialog-title">${title}</h2>${body}<div class="modal-actions"><button class="btn outline" data-action="close-dialog">กลับไปแก้ไข</button><button class="btn ${warning?'primary':'primary'}" data-action="confirm-dialog">${confirm} ${icon('check')}</button></div></div></div>`;
+    return `<div class="modal-backdrop" role="presentation" data-action="dismiss-backdrop"><div class="modal" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="dialog-title"><div class="kicker">PI CHAMPION · ${warning?'IMPORTANT ACTION':'CONFIRMATION'}</div><h2 id="dialog-title">${title}</h2>${body}<div class="modal-actions"><button class="btn outline" data-action="close-dialog">กลับไปแก้ไข</button><button class="btn ${warning?'primary':'primary'}" data-action="confirm-dialog" ${d.type==='reset'&&LIVE.on&&(state.resetConfirm||'').trim().toUpperCase()!=='RESET'?'disabled':''}>${confirm} ${icon('check')}</button></div></div></div>`;
   }
   function render(){
     const focused=document.activeElement;
@@ -432,7 +443,7 @@
       const rows=[];for(const line of lines){if(!line.trim())continue;const parts=line.split(',');const values=Object.fromEntries(headings.map((h,i)=>[h,(parts[i]||'').trim()]));const id=Number(values.team_id);if(!state.teams.some(t=>t.id===id))throw new Error(`ไม่พบ Team ID ${id}`);const scores={};for(const c of DEMO){const n=Number(values[c.id]);if(!Number.isFinite(n)||n<0||n>10||values[c.id]==='')throw new Error(`คะแนน ${c.id} ของ Team ${id} ต้องอยู่ 0–10`);scores[c.id]=n;}rows.push({teamId:id,scores});}if(!rows.length)throw new Error('ไฟล์ CSV ไม่มีข้อมูล');if(new Set(rows.map(x=>x.teamId)).size!==rows.length)throw new Error('พบ team_id ซ้ำกัน');state.dialog={type:'import',rows};render();
     } catch(e){toast('Import CSV ไม่สำเร็จ: '+e.message);}
   };reader.readAsText(file,'UTF-8');}
-  app.addEventListener('input',e=>{const el=e.target;if(el.matches('[data-input="code"]')){state.codeInput=el.value;}if(el.matches('[data-input="new-team"]')){state.newTeamName=el.value;}});
+  app.addEventListener('input',e=>{const el=e.target;if(el.matches('[data-input="code"]')){state.codeInput=el.value;}if(el.matches('[data-input="new-team"]')){state.newTeamName=el.value;}if(el.matches('[data-input="reset-confirm"]')){state.resetConfirm=el.value;const b=document.querySelector('.modal [data-action="confirm-dialog"]');if(b)b.disabled=el.value.trim().toUpperCase()!=='RESET';}});
   app.addEventListener('change',e=>{const el=e.target;if(el.matches('[data-demo-team]')){const id=Number(el.dataset.demoTeam);const c=el.dataset.demoCriterion;const val=Number(el.value);if(el.value.trim()===''||!Number.isFinite(val)||val<0||val>10){toast('คะแนน Demo ต้องอยู่ระหว่าง 0–10');return;}state.demoScores[id]={...state.demoScores[id],[c]:val};save();render();}if(el.matches('[data-input="csv-file"]'))handleCsv(el.files?.[0]);});
   app.addEventListener('click',e=>{
     const btn=e.target.closest('[data-action]');if(!btn)return;const a=btn.dataset.action;
@@ -469,7 +480,7 @@
     if(a==='add-team'){if(state.published)return toast('ประกาศผลแล้ว ไม่สามารถเพิ่มทีมได้');const name=(state.newTeamName||'').trim();if(!name)return toast('กรุณากรอกชื่อทีม');if(state.teams.some(t=>t.name.toLowerCase()===name.toLowerCase()))return toast('มีชื่อทีมนี้แล้ว');const id=Math.max(...state.teams.map(t=>t.id))+1;state.teams.push({id,name});state.demoScores[id]=LIVE.on?{}:defaultDemo(state.teams.length-1);state.newTeamName='';save();toast('เพิ่มทีม '+name+' สำเร็จ (Demo)');return;}
     if(a==='download-csv'){generateCsv();return;}
     if(a==='set-weight'){state.demoWeight=Number(btn.dataset.weight);save();render();return;}
-    if(a==='reset'){openDialog('reset');return;}
+    if(a==='reset'){state.resetConfirm='';openDialog('reset');return;}
   });
   document.addEventListener('keydown',e=>{
     if(e.key==='Enter'&&e.target?.matches?.('[data-input="code"]')){e.preventDefault();app.querySelector('[data-action="login"]')?.click();return;}

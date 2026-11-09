@@ -240,3 +240,11 @@ body[data-screen="scoring"] .judge-layout{display:grid;grid-template-columns:min
 .link-btn{font-weight:var(--fw-strong)}
 .head-user{font-weight:600}
 .summary-panel .suptitle{letter-spacing:.02em}
+
+/* Reset-scores confirm (admin dialog) — reuses .notice.warn + .input */
+.modal .notice{display:flex;gap:8px;align-items:center;margin:12px 0}
+.modal .notice svg{width:18px;height:18px;flex:none}
+.modal p+p{margin-top:8px}
+.reset-confirm{display:grid;gap:8px;margin-top:14px;font-size:.88rem;color:var(--c-muted)}
+.reset-confirm strong{color:var(--c-heading);letter-spacing:.08em}
+.reset-confirm .input{letter-spacing:.12em;text-transform:uppercase}

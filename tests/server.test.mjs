@@ -109,3 +109,29 @@ test('full flow: drafts, submit, lock gate, publish gate', async () => {
   const log = fs.readFileSync(path.join(dataDir, 'audit.log'), 'utf8');
   assert.match(log, /score_submitted/); assert.match(log, /event_updated/);
 });
+
+test('admin reset-scores: needs RESET, backs up, clears scores, unlocks, unpublishes', async () => {
+  const admin = await login('admin', codes.admin);
+  const judge = await login('judge', codes.judges[0]);
+  const before = (await call('GET', '/api/admin/state', null, admin)).data;
+  assert.equal(before.event.published, true); // published by the previous test
+
+  assert.equal((await call('POST', '/api/admin/reset-scores', {}, judge)).status, 403);
+  assert.equal((await call('POST', '/api/admin/reset-scores', { confirm: 'nope' }, admin)).status, 400);
+
+  const r = await call('POST', '/api/admin/reset-scores', { confirm: 'reset' }, admin);
+  assert.equal(r.status, 200);
+  assert.equal(r.data.event.published, false);
+  assert.deepEqual(r.data.event.locked, []);
+  assert.deepEqual(r.data.event.teams, before.event.teams);
+  assert.deepEqual(r.data.event.demoScores, before.event.demoScores);
+  assert.ok(r.data.cleared > 0);
+  assert.deepEqual(Object.keys(r.data.confirmed[1] || {}), []);
+  const backup = JSON.parse(fs.readFileSync(path.join(dataDir, r.data.backup, 'scores.json'), 'utf8'));
+  assert.ok(Object.keys(backup).length > 0);
+
+  assert.deepEqual((await call('GET', '/api/judge/state', null, judge)).data.scores, {});
+  // judges can score again after the reset
+  assert.equal((await call('PUT', '/api/judge/scores', { teamId: 1, draft: full(6), submit: true }, judge)).status, 200);
+  assert.match(fs.readFileSync(path.join(dataDir, 'audit.log'), 'utf8'), /scores_reset/);
+});

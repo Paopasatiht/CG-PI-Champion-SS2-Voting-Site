@@ -275,6 +275,24 @@ async function api(req, res, pathname) {
       audit({ type: 'event_updated', changes, locked: event.locked, published: event.published });
       return send(res, 200, { event: eventView(), judges: JUDGES, confirmed: confirmedByTeam(), status: draftStatus() });
     }
+    // Test helper: wipe every judge score, unlock all teams and cancel publish.
+    // Teams, order, Demo scores and weights stay. A copy is kept in DATA_DIR/backups first.
+    if (pathname === '/api/admin/reset-scores' && req.method === 'POST') {
+      const body = await readBody(req);
+      if (String(body.confirm || '').trim().toUpperCase() !== 'RESET') return fail(res, 400, 'พิมพ์ RESET เพื่อยืนยัน');
+      const stamp = new Date().toISOString().replace(/[:.]/g, '-');
+      const dir = path.join(DATA_DIR, 'backups', `reset-${stamp}`);
+      fs.mkdirSync(dir, { recursive: true });
+      fs.writeFileSync(path.join(dir, 'scores.json'), JSON.stringify(scores, null, 2));
+      fs.writeFileSync(path.join(dir, 'event.json'), JSON.stringify(event, null, 2));
+      const cleared = Object.values(scores).reduce((n, m) => n + Object.keys(m || {}).length, 0);
+      scores = {};
+      writeJson('scores.json', scores);
+      event = { ...event, rev: event.rev + 1, locked: [], published: false, updatedAt: new Date().toISOString() };
+      writeJson('event.json', event);
+      audit({ type: 'scores_reset', cleared, backup: path.relative(DATA_DIR, dir) });
+      return send(res, 200, { event: eventView(), judges: JUDGES, confirmed: confirmedByTeam(), status: draftStatus(), backup: path.relative(DATA_DIR, dir), cleared });
+    }
     return fail(res, 404, 'Not found');
   }
   return fail(res, 404, 'Not found');
