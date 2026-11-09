@@ -18,7 +18,7 @@
     {id:'innovation',name:'Innovation',weight:20,description:'ความคิดสร้างสรรค์ / นวัตกรรม'},
     {id:'benefits',name:'Benefits',weight:20,description:'ประโยชน์ที่ได้รับ'},
   ];
-  const TEAM_NAMES = ['CG#9','FI Navigator','Proxy Voting Process','Security Analysis','D.A.W.N.','Automate Testing','WealthPlus 360°','Smart Fund Launch','PAM Audit & Non-compliance Detection Automation (PANDA)','InsAIght','Smart mail IRS','KAdvisor'];
+  const TEAM_NAMES = ['CG#9','KAdvisor','Automate Testing','Smart Fund Launch','FI Navigator','Smart mail IRS','WealthPlus 360°','InsAIght','Security Analysis','PAM Audit & Non-compliance Detection Automation (PANDA)','D.A.W.N.','Proxy Voting Process'];
   const config = Object.freeze({ FINAL, DEMO, TEAM_NAMES, DEFAULT_DEMO_WEIGHT: 20 });
   if (typeof module === 'object' && module.exports) module.exports = config;
   else root.PI_CONFIG = config;

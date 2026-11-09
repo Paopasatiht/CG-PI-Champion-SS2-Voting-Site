@@ -4,7 +4,7 @@
  */
 (() => {
   'use strict';
-  const STORE = 'pi-champion-season2-ui-demo-v8';
+  const STORE = 'pi-champion-season2-ui-demo-v9';
   const app = document.getElementById('app');
   // Which flow this page serves: index.html = Judge, admin.html = Admin. The two never link to each other.
   const APP = (document.documentElement.dataset.app || window.PI_APP) === 'admin' ? 'admin' : 'judge';
