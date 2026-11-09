@@ -1,0 +1,11 @@
+services:
+  pi-champion:
+    build: .
+    image: pi-champion-s2:latest
+    ports:
+      - "8080:8080"
+    environment:
+      JUDGES: "7"
+    volumes:
+      - ./data:/app/data   # codes, scores, audit log stay on the host
+    restart: unless-stopped

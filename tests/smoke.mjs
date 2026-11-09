@@ -12,6 +12,7 @@ for(const relative of ['assets/css/base.css','assets/css/design-v2.css','assets/
 assert.ok(app.includes('JUDGE01') && app.includes('ADMINDEMO'));
 assert.ok(app.includes('score-half') && app.includes('score-base'));
 assert.ok(index.includes('<div id="app"'));
-assert.ok(index.includes("window.PI_APP='judge'") && adminHtml.includes("window.PI_APP='admin'"), 'Judge and Admin pages must declare their flow');
+assert.ok(index.includes('data-app="judge"') && adminHtml.includes('data-app="admin"'), 'Judge and Admin pages must declare their flow');
+assert.ok(index.includes('assets/js/event-config.js') && adminHtml.includes('assets/js/event-config.js'), 'Pages must load the shared event config');
 assert.ok(!index.includes('admin.html'), 'Judge page must not link to Admin');
 console.log('Static smoke test passed');

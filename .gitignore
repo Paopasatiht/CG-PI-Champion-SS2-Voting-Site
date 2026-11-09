@@ -12,3 +12,6 @@ test-results/
 .DS_Store
 Thumbs.db
 *.log
+
+# Live server data: codes, scores, sessions, audit log (never commit)
+data/

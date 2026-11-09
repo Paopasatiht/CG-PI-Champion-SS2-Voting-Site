@@ -106,6 +106,35 @@ flowchart TD
 - กดโลโก้ KAsset: กรรมการไป Judge Dashboard, Admin ไป Admin Dashboard
 - `demo-single-file.html` (Judge flow ไฟล์เดียว) สร้างจาก `python3 tools/build-single-file.py`
 
+## ใช้งานจริง (Live server · กรรมการ 7 ท่าน)
+
+ระบบจริงใช้ `server/server.mjs` (Node 18+ ไม่ต้อง `npm install`) เสิร์ฟหน้าเว็บและเก็บคะแนนกลาง
+กรรมการกรอกผ่านลิงก์ → คะแนนส่งเข้า server → Admin เห็นความคืบหน้าจริง, Lock และ Publish ได้
+
+```bash
+npm run codes          # ครั้งแรก: สร้างรหัสกรรมการ 7 ท่าน + Admin -> data/CODES-PRIVATE.txt
+npm start              # http://localhost:8080 (กรรมการ)  ·  http://localhost:8080/admin (Admin)
+# หรือ Docker
+docker compose up -d --build
+```
+
+| ไฟล์ใน `data/` (ไม่ขึ้น Git) | เก็บอะไร |
+|---|---|
+| `CODES-PRIVATE.txt` | รหัสที่ใช้แจกกรรมการ / Admin (เก็บเป็นความลับ) |
+| `judges.json` | รายชื่อกรรมการ + hash ของรหัส (แก้ชื่อได้ที่ช่อง `name` แล้ว restart) |
+| `event.json` | ทีม, คะแนน Demo, สัดส่วน, สถานะ Lock / Publish |
+| `scores.json` | คะแนน Draft / Confirmed ของกรรมการแต่ละท่าน |
+| `audit.log` | ประวัติ login, ส่งคะแนน, Lock, Publish |
+
+กติกาที่ server บังคับ: กรรมการเห็นเฉพาะคะแนนตัวเอง · Lock ทีมได้เมื่อกรรมการส่งครบทุกท่าน ·
+ทีมที่ Lock แล้วแก้คะแนนไม่ได้ · Publish ได้เมื่อ Lock ครบทุกทีม · Publish แล้ว Unlock / ยกเลิกไม่ได้ ·
+ใส่รหัสผิดเกิน 10 ครั้ง/นาที ถูกพักชั่วคราว
+
+- หน้าเว็บตรวจเองว่ามี server (`/api/health`) ถ้ามีจะเป็นโหมด **LIVE** ถ้าไม่มี (artifact / เปิดไฟล์ตรง) จะเป็นโหมด Demo เหมือนเดิม
+- กรรมการต้องเปิดเครื่องที่รัน server ได้ เช่น อยู่ Wi-Fi เดียวกันแล้วใช้ `http://<IP เครื่อง Admin>:8080` (server พิมพ์ IP ให้ตอนเริ่ม) และต้องเปิด firewall พอร์ต 8080
+- ทดสอบ: `npm test` (smoke + integration test ของ server)
+- สร้างรหัสใหม่ทั้งชุด: `node server/generate-codes.mjs --force` (รหัสเดิมใช้ไม่ได้ทันที)
+
 ## กติกาคะแนนที่ใช้เป็น Design Target
 
 - Final Day ให้คะแนน **0–10** ครั้งละ **0.5** ตามเกณฑ์ที่ Admin กำหนด

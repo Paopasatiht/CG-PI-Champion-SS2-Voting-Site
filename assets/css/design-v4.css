@@ -231,3 +231,9 @@ button.brand:focus-visible{outline:2px solid #d8eeb5;outline-offset:3px}
 /* Scoring progress panel: keep the "00 / 06" counter readable on phones */
 .progress-panel>div:first-child{flex:1 1 auto;min-width:0}
 .progress-panel>div:last-child{flex:none;white-space:nowrap}
+
+/* Live mode (served by server/server.mjs): hide demo-only controls */
+html[data-live="1"] [data-action="reset"],
+html[data-live="1"] [data-action="simulate"],
+html[data-live="1"] [data-action="fill-code"],
+html[data-live="1"] .access-hint{display:none!important}
