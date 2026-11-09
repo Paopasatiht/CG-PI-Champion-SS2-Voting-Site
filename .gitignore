@@ -22,3 +22,6 @@ assets/js/access-codes.js
 # Docker image exports
 *.tar.gz
 deploy/
+
+# ngrok token
+data/ngrok-authtoken.txt

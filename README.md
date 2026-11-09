@@ -157,6 +157,12 @@ docker compose logs -f
 - สำรองข้อมูล: copy โฟลเดอร์ `./data` (คะแนน, รหัส, audit log)
 - อัปเดตโค้ด: `docker compose up -d --build` (ข้อมูลใน `./data` ไม่หาย)
 
+## แชร์ลิงก์สาธารณะชั่วคราว (ngrok)
+
+1. ใส่ authtoken ของ ngrok ลงไฟล์ `data/ngrok-authtoken.txt` (ไฟล์นี้ไม่ขึ้น Git)
+2. ดับเบิลคลิก `start-public-ngrok.bat` — ติดตั้ง ngrok ให้ถ้ายังไม่มี, เปิด server ถ้ายังไม่รัน, แล้วสร้างลิงก์ `https://….ngrok-free.app`
+3. กรรมการเปิดลิงก์นั้น, Admin เปิด `<ลิงก์>/admin` · ปิดหน้าต่าง ngrok = ลิงก์หยุดทำงาน
+
 ## กติกาคะแนนที่ใช้เป็น Design Target
 
 - Final Day ให้คะแนน **0–10** ครั้งละ **0.5** ตามเกณฑ์ที่ Admin กำหนด
