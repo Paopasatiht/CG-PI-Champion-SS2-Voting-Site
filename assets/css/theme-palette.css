@@ -1,0 +1,54 @@
+/* PI Champion S2 — palette layer (loaded last).
+   #063F35 deep · #006B68 teal · #596D69 slate · #D9F0E5 mint · #F6F5F0 paper */
+:root{
+  --p-deep:#063F35; --p-teal:#006B68; --p-slate:#596D69; --p-mint:#D9F0E5; --p-paper:#F6F5F0;
+  --p-ink:#0B2A25; --p-line:#DCE3DF;
+  --font-ui:"IBM Plex Sans Thai","Noto Sans Thai","Sukhumvit Set","Leelawadee UI",Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+html,body{background:var(--p-paper)}
+body{color:var(--p-ink)}
+
+/* ---------- Login (Judge & Admin) ---------- */
+body[data-screen="judgeAccess"] .shell,body[data-screen="adminAccess"] .shell{max-width:none;margin:0;padding:0}
+.login-split{display:grid;grid-template-columns:minmax(0,53fr) minmax(0,47fr);min-height:100vh;min-height:100dvh;font-family:var(--font-ui)}
+.login-brand{position:relative;overflow:hidden;background:var(--p-deep);color:#fff;padding:clamp(28px,4.4vw,64px) clamp(24px,5.5vw,88px);display:flex;flex-direction:column}
+.login-logo{width:clamp(120px,11vw,176px);height:auto;display:block}
+.login-title{margin:clamp(48px,9vh,120px) 0 0 clamp(0px,2.6vw,40px);font-family:var(--font-ui);font-weight:700;font-style:normal;font-size:clamp(44px,5.4vw,88px);line-height:1.02;letter-spacing:-.035em;color:#fff;position:relative;z-index:1}
+.login-title span{display:block;margin-top:.12em;font-size:.5em;font-weight:500;letter-spacing:.01em;color:#A9DCC6}
+.login-two{position:absolute;right:0;bottom:0;width:min(86%,820px);max-height:66%;object-fit:contain;object-position:right bottom;height:auto;pointer-events:none;user-select:none;filter:brightness(1.55) saturate(.95);opacity:.95}
+.login-panel{position:relative;background:var(--p-paper);display:flex;align-items:center;justify-content:flex-start;padding:clamp(28px,5vw,72px) clamp(24px,5.6vw,96px)}
+.login-kicker{position:absolute;top:clamp(28px,4.4vw,64px);right:clamp(24px,5vw,80px);font-weight:600;letter-spacing:.18em;font-size:.95rem;color:var(--p-slate)}
+.login-form{width:100%;max-width:560px;margin:0}
+.login-rule{display:block;width:76px;height:3px;border-radius:2px;background:var(--p-teal);margin-bottom:34px}
+.login-form h2{font-family:var(--font-ui);font-weight:700;font-size:clamp(30px,3.1vw,46px);line-height:1.15;letter-spacing:-.01em;color:var(--p-deep);margin:0}
+.login-sub{margin:10px 0 0;color:var(--p-slate);font-size:clamp(15px,1.25vw,19px)}
+.login-label{display:block;margin:40px 0 12px;font-weight:600;font-size:1.12rem;color:var(--p-deep)}
+.login-input{width:100%;height:68px;border-radius:10px;border:1.5px solid #9AA9A5;background:#fff;padding:0 22px;font:500 1.15rem/1 var(--font-ui);color:var(--p-ink);letter-spacing:.04em;outline:none;transition:border-color .15s,box-shadow .15s}
+.login-input::placeholder{color:#8C9A96;letter-spacing:0}
+.login-input:focus{border-color:var(--p-teal);box-shadow:0 0 0 4px rgba(0,107,104,.14)}
+.login-btn{margin-top:30px;width:100%;height:70px;border:0;border-radius:8px;background:var(--p-teal);color:#fff;display:flex;align-items:center;justify-content:center;position:relative;font:600 1.3rem/1 var(--font-ui);cursor:pointer;transition:background .15s,transform .1s}
+.login-btn .icon{position:absolute;right:26px;width:26px;height:26px}
+.login-btn:hover{background:#005A57}.login-btn:active{transform:translateY(1px)}
+.login-btn:focus-visible{outline:3px solid var(--p-mint);outline-offset:3px}
+.login-help{margin:30px 0 0;color:var(--p-slate);font-size:1.05rem}
+.login-contact{color:var(--p-deep);font-weight:600;text-decoration:underline;text-underline-offset:4px}
+.login-note{margin:34px 0 0;color:var(--p-slate);font-size:1.02rem}
+.login-form .access-hint{margin-top:14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:var(--p-mint);border:0;color:var(--p-deep);border-radius:8px;padding:10px 14px;font-size:.9rem}
+.login-link{border:0;background:none;color:var(--p-teal);font:600 .9rem var(--font-ui);text-decoration:underline;cursor:pointer;padding:0}
+@media(max-width:900px){
+  .login-split{grid-template-columns:1fr;grid-template-rows:auto 1fr}
+  .login-brand{min-height:300px;padding:24px 24px 28px}
+  .login-title{margin:36px 0 0;font-size:clamp(40px,10vw,60px)}
+  .login-two{width:min(62%,330px);left:auto;right:-4%;bottom:-6%;opacity:.9}
+  .login-panel{align-items:flex-start;padding:40px 24px 48px}
+  .login-kicker{position:static;margin:0 0 18px;font-size:.8rem}
+  .login-panel{flex-direction:column}
+  .login-rule{margin-bottom:24px}
+  .login-label{margin-top:30px}
+  .login-input,.login-btn{height:58px}
+}
+@media(max-width:380px){
+  .login-brand{min-height:250px}
+  .login-title{font-size:38px}
+  .login-form h2{font-size:27px}
+}
