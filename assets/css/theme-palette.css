@@ -103,13 +103,16 @@ body:not([data-screen="judgeAccess"]):not([data-screen="adminAccess"]) .shell{ma
 .data-table input.input{min-height:38px;width:96px;padding:6px 10px;border-radius:var(--radius-sm)}
 /* clickable rows */
 .data-table--rows tbody tr{position:relative;cursor:pointer;transition:background .12s}
+/* arrow always takes its space, so hovering never changes column widths */
+.data-table--rows .link-btn::after{content:"→";display:inline-block;margin-left:.3em;opacity:0;transform:translateX(-4px);transition:opacity .15s,transform .15s}
+.data-table--rows tbody tr:focus-within .link-btn::after{opacity:1;transform:none}
 .data-table--rows tbody tr td:first-child{box-shadow:inset 0 0 0 transparent;transition:box-shadow .15s}
 @media(hover:hover){
   .data-table--rows tbody tr:hover{background:var(--p-hover)}
   .data-table--rows tbody tr:hover td:first-child{box-shadow:inset 5px 0 0 var(--p-teal)}
   .data-table--rows tbody tr:hover .col-name strong{color:var(--p-teal)}
   .data-table--rows tbody tr:hover .link-btn{color:var(--p-deep);text-decoration-thickness:2px}
-  .data-table--rows tbody tr:hover .link-btn::after{content:" →"}
+  .data-table--rows tbody tr:hover .link-btn::after{opacity:1;transform:none}
   .data-table--rows tbody tr.is-done:hover{background:#C9E9DA}
 }
 .data-table--rows tbody tr:focus-within{background:var(--p-hover)}
