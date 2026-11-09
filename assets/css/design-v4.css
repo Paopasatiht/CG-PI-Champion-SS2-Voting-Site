@@ -227,3 +227,7 @@ button.brand:focus-visible{outline:2px solid #d8eeb5;outline-offset:3px}
   .page-top .chip-row{width:100%}
   .page-top .chip-row .btn{flex:1 1 auto;justify-content:center}
 }
+
+/* Scoring progress panel: keep the "00 / 06" counter readable on phones */
+.progress-panel>div:first-child{flex:1 1 auto;min-width:0}
+.progress-panel>div:last-child{flex:none;white-space:nowrap}
