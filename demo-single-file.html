@@ -1048,7 +1048,7 @@ body{background:linear-gradient(165deg,#f7f6f1 0%,#fdfcf7 42%,#f1f5ed 100%);min-
  */
 (() => {
   'use strict';
-  const STORE = 'pi-champion-season2-ui-demo-v1';
+  const STORE = 'pi-champion-season2-ui-demo-v2';
   const app = document.getElementById('app');
   const FINAL = [
     {id:'ai',name:'AI Innovation',weight:30,icon:'cpu',description:'ความสร้างสรรค์ในการประยุกต์ใช้ AI'},
@@ -1061,9 +1061,9 @@ body{background:linear-gradient(165deg,#f7f6f1 0%,#fdfcf7 42%,#f1f5ed 100%);min-
     {id:'impact',name:'Potential Impact',weight:35},
     {id:'feasibility',name:'Feasibility',weight:25},
   ];
-  const TEAM_NAMES=['Team Momentum','Team Horizon','Team Aurora','Team Vertex','Team Nexus','Team Nova','Team Zenith','Team Atlas','Team Catalyst','Team Velocity','Team Synergy','Team Polaris'];
+  const TEAM_NAMES=['CG#9','Team Horizon','Team Aurora','Team Vertex','Team Nexus','Team Nova','Team Zenith','Team Atlas','Team Catalyst','Team Velocity','Team Synergy','Team Polaris'];
   // Presentation order and score rank are independent: Aurora presents third, but is first in mock scores.
-  const MOCK_QUALITY_RANK={'Team Aurora':0,'Team Horizon':1,'Team Atlas':2,'Team Momentum':3,'Team Vertex':4,'Team Nexus':5,'Team Nova':6,'Team Zenith':7,'Team Catalyst':8,'Team Velocity':9,'Team Synergy':10,'Team Polaris':11};
+  const MOCK_QUALITY_RANK={'Team Aurora':0,'Team Horizon':1,'Team Atlas':2,'CG#9':3,'Team Vertex':4,'Team Nexus':5,'Team Nova':6,'Team Zenith':7,'Team Catalyst':8,'Team Velocity':9,'Team Synergy':10,'Team Polaris':11};
   const quality = teamId => { const t=state.teams.find(x=>x.id===teamId);return t ? (MOCK_QUALITY_RANK[t.name]??state.teams.indexOf(t)) : 11; };
   const fixed = n => (Number.isFinite(Number(n)) ? Number(n).toFixed(2) : '—');
   const half = n => Math.min(10,Math.max(0,Math.round(n*2)/2));
