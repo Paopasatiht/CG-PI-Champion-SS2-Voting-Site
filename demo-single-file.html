@@ -922,6 +922,26 @@ body{background:linear-gradient(165deg,#f7f6f1 0%,#fdfcf7 42%,#f1f5ed 100%);min-
 @media(max-width:900px){.access-experience{grid-template-columns:1fr;min-height:auto;border-radius:28px}.access-atmosphere{min-height:230px;padding:28px 28px 22px}.access-atmosphere h1{font-size:3.05rem;margin:14px 0 8px}.access-atmosphere p{font-size:.85rem;max-width:330px}.access-mascot{width:105px;height:105px;right:23px;bottom:14px}.access-form-column{padding:20px}.access-elevated{max-width:650px}.journey-intro{padding:21px 22px}.team-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.workflow-step{grid-template-columns:1fr;justify-items:center;text-align:center;gap:3px}.workflow-step span{grid-row:auto}.workflow-step small{font-size:.67rem}.stage:not(.results-stage) .podium-card{min-height:255px}.stage:not(.results-stage) .podium-card.first{min-height:330px}}
 @media(max-width:650px){.site-head-workspace .header-inner{padding-inline:12px}.site-head-workspace .brand-title{font-size:1.2rem}.site-head-workspace .head-link{font-size:.71rem;padding:7px 6px}.journey-intro{min-height:130px;padding:20px 17px}.journey-intro h3{font-size:1.35rem;max-width:260px}.journey-intro p{font-size:.77rem;max-width:240px}.journey-intro-art{width:50%;opacity:.45}.team-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.team-card{min-height:135px;padding:14px}.team-card .order{font-size:1.5rem}.team-card .teamname{font-size:1rem}.team-card .foot{font-size:.67rem}.team-card .pill{font-size:.65rem}.score-btn{min-height:45px}.access-atmosphere{min-height:240px;padding:25px 19px}.access-atmosphere h1{font-size:2.55rem;max-width:75%}.access-atmosphere p{font-size:.8rem;max-width:70%}.access-mascot{right:10px;bottom:10px;width:97px}.access-form-column{padding:14px}.access-elevated>.card-pad{padding:23px 18px}.access-actions{grid-template-columns:1fr}.access-actions .btn{min-height:47px}.admin-journey{padding:19px 16px;border-radius:20px}.admin-journey h3{font-size:1.32rem}.workflow-steps{gap:5px}.workflow-step{padding:8px 3px;border-radius:12px}.workflow-step span{width:35px;height:35px;font-size:.75rem}.workflow-step strong{font-size:.73rem}.workflow-step small{font-size:.58rem}.tie-review-workspace{padding:17px}.tie-review-header{gap:10px}.tie-review-seal{width:47px;height:47px}.tie-review-header h3{font-size:1.2rem}.tie-sample-grid{grid-template-columns:1fr}.stage:not(.results-stage){min-height:650px}.stage:not(.results-stage) .podium-card{min-height:238px;padding:20px 4px 20px}.stage:not(.results-stage) .podium-card.first{min-height:285px}.stage:not(.results-stage) .podium-card .medal{width:58px;height:65px}.stage:not(.results-stage) .podium-card.first .medal{width:73px;height:82px}.stage:not(.results-stage) .award-label{font-size:.56rem}.stage:not(.results-stage) .podium-card h2{font-size:.98rem}.stage:not(.results-stage) .podium-card .points{font-size:1.6rem}.stage:not(.results-stage) .podium-card small{font-size:.6rem}}
 @media(prefers-reduced-motion:reduce){.stage:not(.results-stage) .podium-card{animation:none}.hero-ribbon-image{animation:none}.team-card{transition:none}}
+/* Team picker: one team per row (list layout) */
+.team-grid{display:flex;flex-direction:column;gap:10px}
+.team-card{display:grid;grid-template-columns:64px minmax(0,1fr) auto minmax(150px,auto);grid-template-areas:"order name status foot";align-items:center;column-gap:18px;row-gap:6px;min-height:0;padding:16px 22px;border-radius:18px}
+.team-card:after{display:none}
+.team-card:hover{transform:translateX(3px)}
+.team-card .topline{display:contents}
+.team-card .order{grid-area:order;font-size:1.75rem;line-height:1}
+.team-card .topline>:not(.order){grid-area:status;justify-self:end}
+.team-card .teamname{grid-area:name;font-size:1.12rem;line-height:1.3;overflow-wrap:anywhere}
+.team-card .foot{grid-area:foot;justify-content:flex-end;gap:10px;white-space:nowrap}
+@media(max-width:650px){
+  .team-grid{gap:8px}
+  .team-card{grid-template-columns:44px minmax(0,1fr) auto;grid-template-areas:"order name name" "order status foot";column-gap:12px;padding:13px 14px;min-height:0}
+  .team-card .order{font-size:1.4rem;align-self:start}
+  .team-card .topline>:not(.order){justify-self:start}
+  .team-card .teamname{font-size:.98rem}
+  .team-card .foot{font-size:.67rem}
+}
+@media(prefers-reduced-motion:reduce){.team-card:hover{transform:none}}
+
 
 </style>
 </head>
