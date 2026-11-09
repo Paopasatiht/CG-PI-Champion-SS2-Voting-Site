@@ -92,6 +92,20 @@ flowchart TD
 
 > คำเตือน: การกด Submit, Lock หรือ Publish ใน Demo นี้มีผลเฉพาะข้อมูลทดสอบของเบราว์เซอร์เครื่องนั้น ไม่กระทบกรรมการ/ผู้ใช้อื่น
 
+## หน้าเว็บและ URL (แยก Judge / Admin)
+
+| หน้า | URL | ขั้นตอน |
+|---|---|---|
+| กรรมการ (หน้าแรก) | `/` หรือ `/index.html` | `#login` → `#teams` → `#team-<id>` |
+| Admin | `/admin` หรือ `/admin.html` | `#login` → `#admin` → `#results` |
+
+- หน้าแรกของเว็บคือหน้า **Judge Access** เสมอ
+- แต่ละขั้นมี URL ของตัวเอง กด Refresh แล้วอยู่หน้าเดิม และปุ่ม Back ของเบราว์เซอร์ใช้ได้
+- หน้าของกรรมการไม่มีปุ่มหรือลิงก์ไปหน้า Admin; Admin เข้าผ่าน `/admin` โดยตรงเท่านั้น
+- ยังไม่ได้ Login แล้วเปิด URL ข้างใน ระบบจะพากลับไปหน้า `#login`
+- กดโลโก้ KAsset: กรรมการไป Judge Dashboard, Admin ไป Admin Dashboard
+- `demo-single-file.html` (Judge flow ไฟล์เดียว) สร้างจาก `python3 tools/build-single-file.py`
+
 ## กติกาคะแนนที่ใช้เป็น Design Target
 
 - Final Day ให้คะแนน **0–10** ครั้งละ **0.5** ตามเกณฑ์ที่ Admin กำหนด
