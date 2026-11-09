@@ -1,0 +1,15 @@
+PI Champion Season 2 — login codes (created 2026-11-09T04:11:48.790Z)
+รหัสจริงสำหรับวันงาน · เก็บใน private repo เท่านั้น · ห้ามแชร์ไฟล์นี้นอกทีมผู้จัดงาน
+
+ชื่อ	ID	รหัส
+กรรมการ 1	J1	PI-8R6SZM
+กรรมการ 2	J2	PI-5ECF3T
+กรรมการ 3	J3	PI-FFTTNN
+กรรมการ 4	J4	PI-5HPDXC
+กรรมการ 5	J5	PI-FCMK7C
+กรรมการ 6	J6	PI-3KMJ9F
+กรรมการ 7	J7	PI-6YRNC8
+
+Admin	-	ADM-GGNH-HA2D
+
+เปลี่ยนชื่อกรรมการได้ที่ judges.json (ช่อง "name") แล้ว restart server

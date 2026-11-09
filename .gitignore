@@ -1,0 +1,26 @@
+# Local secrets and build artifacts
+.env
+.env.*
+!.env.example
+.vercel/
+node_modules/
+dist/
+build/
+coverage/
+playwright-report/
+test-results/
+.DS_Store
+Thumbs.db
+*.log
+
+# Live server data: scores, sessions, audit log, backups (machine-specific, never commit).
+# The event's login codes are committed in seed/ (private repo only).
+data/
+
+
+# Docker image exports
+*.tar.gz
+deploy/
+
+# ngrok token
+data/ngrok-authtoken.txt

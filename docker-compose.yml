@@ -1,0 +1,38 @@
+# PI Champion Season 2 — ready-to-deploy stack
+#   docker compose up -d --build     start (or: docker load -i pi-champion-s2-image.tar.gz && docker compose up -d)
+#   docker compose logs -f           see judge/admin URLs and activity
+#   docker compose down              stop (scores stay in the pi-champion-data volume)
+# Login codes: seed/CODES.txt (copied into the volume on first start)
+# Backup:  docker compose cp pi-champion:/app/data ./data-backup
+# Wipe everything and start clean:  docker compose down -v
+services:
+  pi-champion:
+    build: .
+    image: pi-champion-s2:latest
+    container_name: pi-champion-s2
+    ports:
+      - "${PORT:-8080}:8080"
+    environment:
+      JUDGES: "${JUDGES:-7}"
+      SESSION_HOURS: "${SESSION_HOURS:-24}"
+      TZ: Asia/Bangkok
+      PUBLIC_URL: "${PUBLIC_URL:-}"   # e.g. http://10.1.2.3:8080 — printed in the logs for judges
+    volumes:
+      - pi-champion-data:/app/data   # named volume: writable by the non-root container user on any host
+    init: true
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  pi-champion-data:
