@@ -204,3 +204,26 @@ body{background:linear-gradient(165deg,#f7f6f1 0%,#fdfcf7 42%,#f1f5ed 100%);min-
   .team-card .foot{font-size:.67rem}
 }
 @media(prefers-reduced-motion:reduce){.team-card:hover{transform:none}}
+
+/* Official KAsset logo in header (clickable: goes to the signed-in role's dashboard) */
+button.brand{appearance:none;background:none;border:0;padding:4px 6px 4px 0;margin:0;font:inherit;color:inherit;cursor:pointer;text-align:left;border-radius:12px;flex:none}
+button.brand:focus-visible{outline:2px solid #d8eeb5;outline-offset:3px}
+.brand-logo{display:block;height:36px;width:auto;max-width:none}
+@media(max-width:900px){.brand-logo{height:30px}}
+@media(max-width:650px){.brand-logo{height:26px}}
+@media(max-width:360px){.brand-logo{height:22px}}
+
+/* Responsive hardening: desktop · iPad · iPhone · narrow foldables (≥280px) */
+.admin-section>*,.admin-panel,.card,.table-wrap{min-width:0}
+.table-wrap{-webkit-overflow-scrolling:touch}
+.page-top{flex-wrap:wrap;gap:12px}
+.page-top>*{min-width:0}
+.small-gray,.criterion-head,.inline-meta{overflow-wrap:anywhere}
+@media(max-width:650px){.admin-table th,.admin-table td{white-space:nowrap}}
+@media(max-width:360px){
+  .site-head .head-right>.pill{display:none}
+  .header-inner{padding-inline:10px;gap:8px}
+  .brand{gap:7px}
+  .page-top .chip-row{width:100%}
+  .page-top .chip-row .btn{flex:1 1 auto;justify-content:center}
+}
