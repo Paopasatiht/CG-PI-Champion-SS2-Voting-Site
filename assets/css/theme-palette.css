@@ -119,3 +119,18 @@ body[data-screen="judgeDashboard"] .shell{max-width:1240px}
 }
 .site-head .event-name em{font-style:normal}
 @media(max-width:760px){.jd-score.is-empty{visibility:hidden}}
+
+/* Row hover: make each team row read as clickable */
+.jd-row:not(.jd-th){position:relative}
+.jd-row:not(.jd-th)::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--p-teal);transform:scaleY(0);transition:transform .15s ease}
+@media(hover:hover){
+  .jd-row:not(.jd-th):hover{background:#E6F4EE;box-shadow:inset 0 0 0 1px rgba(0,107,104,.18)}
+  .jd-row.is-done:hover{background:#C9E9DA}
+  .jd-row:not(.jd-th):hover::before{transform:scaleY(1)}
+  .jd-row:not(.jd-th):hover .jd-name{color:var(--p-teal)}
+  .jd-row:not(.jd-th):hover .jd-link{color:var(--p-deep);text-decoration-thickness:2px}
+  .jd-row:not(.jd-th):hover .jd-link::after{content:" →"}
+}
+.jd-row:not(.jd-th):focus-within{background:#E6F4EE}
+.jd-row:not(.jd-th):focus-within::before{transform:scaleY(1)}
+.jd-row:not(.jd-th):active{background:#D3EDE2}
