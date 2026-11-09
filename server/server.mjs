@@ -162,7 +162,10 @@ function serveStatic(req, res, pathname) {
   if (!abs.startsWith(path.join(ROOT, 'assets')) && !Object.values(STATIC).includes(rel) && rel !== 'robots.txt') return fail(res, 404, 'Not found');
   fs.readFile(abs, (err, buf) => {
     if (err) return fail(res, 404, 'Not found');
-    send(res, 200, buf, { 'Content-Type': TYPES[path.extname(abs)] || 'application/octet-stream', 'Cache-Control': rel.endsWith('.html') ? 'no-cache' : 'public, max-age=300' });
+    const etag = '"' + crypto.createHash('sha1').update(buf).digest('hex').slice(0, 16) + '"';
+    const headers = { 'Content-Type': TYPES[path.extname(abs)] || 'application/octet-stream', 'Cache-Control': 'no-cache', ETag: etag };
+    if (req.headers['if-none-match'] === etag) { res.writeHead(304, { ...SECURITY_HEADERS, ...headers }); return res.end(); }
+    send(res, 200, buf, headers);
   });
 }
 

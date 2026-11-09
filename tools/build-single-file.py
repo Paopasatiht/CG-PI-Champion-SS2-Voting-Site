@@ -21,7 +21,7 @@ def js(m):
     src = inline_images((root / m.group(1)).read_text(encoding='utf-8'))
     return '<script>\n' + src + '\n</script>'
 
-html = re.sub(r'<link rel="stylesheet" href="\./([^"]+)">', css, html)
-html = re.sub(r'<script src="\./([^"]+)" defer></script>', js, html)
+html = re.sub(r'<link rel="stylesheet" href="\./([^"?]+)(?:\?v=[0-9a-f]*)?">', css, html)
+html = re.sub(r'<script src="\./([^"?]+)(?:\?v=[0-9a-f]*)?" defer></script>', js, html)
 (root / 'demo-single-file.html').write_text(html, encoding='utf-8')
 print('wrote demo-single-file.html', len(html), 'bytes')
