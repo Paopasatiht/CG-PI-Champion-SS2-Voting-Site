@@ -25,7 +25,7 @@
     arrow:'<path d="M5 12h14m-7-7 7 7-7 7"/>',back:'<path d="m15 18-6-6 6-6"/>',
     lock:'<rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>',
     users:'<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2m19 0v-2a4 4 0 0 0-3-3.87M12 3.13a4 4 0 0 1 0 7.75"/><circle cx="9" cy="7" r="4"/>',
-    check:'<path d="m4 12 5 5L20 6"/>',checkcircle:'<circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/>',
+    check:'<path d="m4 12 5 5L20 6"/>',user:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.2 3.6-6.5 8-6.5s8 2.3 8 6.5"/>',checkcircle:'<circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/>',
     trophy:'<path d="M8 21h8m-4-4v4M7 3h10v6a5 5 0 0 1-10 0V3ZM7 5H4v2a4 4 0 0 0 4 4m9-6h3v2a4 4 0 0 1-4 4"/>',
     clipboard:'<rect x="5" y="5" width="14" height="17" rx="2"/><rect x="9" y="2" width="6" height="5" rx="1"/><path d="m9 14 2 2 4-4"/>',
     cpu:'<rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4m6-4v4M9 18v4m6-4v4M2 9h4m-4 6h4m12-6h4m-4 6h4"/><path d="M9 9h6v6H9z"/>',
@@ -281,6 +281,8 @@
     if(state.screen==='home'){
       return `<header class="site-head site-head-home"><div class="header-inner home-head-inner">${brand()}<div class="head-right"><nav class="header-nav home-nav" aria-label="Primary"><a class="head-link active" href="#home-cover">Home</a><a class="head-link" href="#home-about">About the Competition</a><a class="head-link" href="#how-it-works">How It Works</a><a class="head-link" href="#faq">FAQ</a></nav></div></div></header>`;
     }
+    if(APP==='judge'&&authed()){const who=LIVE.me?.name||state.judgeName||'กรรมการ';
+      return `<header class="site-head site-head-workspace jd-header"><div class="header-inner">${brand()}<div class="head-right"><span class="jd-user">${icon('user')}${esc(who)}</span><button type="button" class="jd-logout" data-action="logout">ออกจากระบบ</button></div></div></header>`;}
     const tabs=APP==='admin'&&authed()?[['admin','Admin'],['stage','ประกาศผล']]:[];
     return `<header class="site-head site-head-workspace"><div class="header-inner">${brand()}<div class="head-right"><nav class="header-nav" aria-label="เลือกมุมมอง">${tabs.map(([s,label])=>`<button class="head-link ${(state.screen===s||(s==='judgeDashboard'&&state.screen==='scoring'))?'active':''}" data-action="head-nav" data-target="${s}">${label}</button>`).join('')}</nav>${badge(LIVE.on?'LIVE':ACCESS()?'TEST MODE':'INTERACTIVE DEMO','lime')}<span class="avatar" aria-hidden="true"><img src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22128%22%20height%3D%22128%22%20viewBox%3D%220%200%20128%20128%22%20role%3D%22img%22%20aria-label%3D%22Cassie%20concept%20mascot%22%3E%0A%3Cdefs%3E%3CradialGradient%20id%3D%22head%22%20cx%3D%22.38%22%20cy%3D%22.24%22%20r%3D%22.82%22%3E%3Cstop%20stop-color%3D%22%23fbfff4%22%2F%3E%3Cstop%20offset%3D%22.75%22%20stop-color%3D%22%23d9f1c8%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23a9d48f%22%2F%3E%3C%2FradialGradient%3E%3ClinearGradient%20id%3D%22leaf%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%2377e562%22%2F%3E%3Cstop%20offset%3D%22.6%22%20stop-color%3D%22%23158d3e%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%2306633b%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%0A%3Cellipse%20cx%3D%2262%22%20cy%3D%22112%22%20rx%3D%2235%22%20ry%3D%227%22%20fill%3D%22%231f7644%22%20opacity%3D%22.13%22%2F%3E%0A%3Cpath%20d%3D%22M42%2095q-14%208-12%2018%2018%207%2032-3%2016%2010%2035%203%200-16-16-20%22%20fill%3D%22url%28%23leaf%29%22%20stroke%3D%22%23098042%22%20stroke-width%3D%222%22%2F%3E%0A%3Cpath%20d%3D%22M27%2054c0-30%2020-43%2038-43%2032%200%2046%2023%2044%2048-2%2030-20%2048-47%2048-25%200-42-17-35-53Z%22%20fill%3D%22url%28%23head%29%22%20stroke%3D%22%2377bd81%22%20stroke-width%3D%222.5%22%2F%3E%0A%3Cpath%20d%3D%22M49%2022C36%205%2046-1%2062%206c12%204%2014%2013%2012%2018-11%206-18%206-25-2Z%22%20fill%3D%22url%28%23leaf%29%22%2F%3E%0A%3Cpath%20d%3D%22M61%2021C63%202%2078-4%2090%207c7%207%204%2018-6%2020-8%201-16%200-23-6Z%22%20fill%3D%22%231a9c4e%22%2F%3E%0A%3Cpath%20d%3D%22M60%2028Q72%2013%2086%2012%22%20fill%3D%22none%22%20stroke%3D%22%23a9f89b%22%20stroke-width%3D%222.5%22%20stroke-linecap%3D%22round%22%2F%3E%0A%3Cellipse%20cx%3D%2245%22%20cy%3D%2265%22%20rx%3D%225%22%20ry%3D%227%22%20fill%3D%22%23143b27%22%2F%3E%3Cellipse%20cx%3D%2281%22%20cy%3D%2265%22%20rx%3D%225%22%20ry%3D%227%22%20fill%3D%22%23143b27%22%2F%3E%0A%3Ccircle%20cx%3D%2243%22%20cy%3D%2262%22%20r%3D%221.8%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%2279%22%20cy%3D%2262%22%20r%3D%221.8%22%20fill%3D%22white%22%2F%3E%0A%3Cellipse%20cx%3D%2232%22%20cy%3D%2277%22%20rx%3D%227%22%20ry%3D%224%22%20fill%3D%22%23f6acb2%22%20opacity%3D%22.5%22%2F%3E%3Cellipse%20cx%3D%2295%22%20cy%3D%2277%22%20rx%3D%227%22%20ry%3D%224%22%20fill%3D%22%23f6acb2%22%20opacity%3D%22.5%22%2F%3E%0A%3Cpath%20d%3D%22M54%2078q10%2014%2020%200%22%20fill%3D%22none%22%20stroke%3D%22%23163b29%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%0A%3Cpath%20d%3D%22M100%2088q16-15%2021-1c3%2010-5%2019-17%2011%22%20fill%3D%22url%28%23head%29%22%20stroke%3D%22%2365ad6b%22%20stroke-width%3D%222%22%2F%3E%0A%3Cpath%20d%3D%22M105%2093l6%205%2010-14%22%20fill%3D%22none%22%20stroke%3D%22%23168e44%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%0A%3Cpath%20d%3D%22M107%2021l6-10M115%2034l11-4%22%20stroke%3D%22%2338b452%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%0A%3C%2Fsvg%3E%0A" alt="" width="46" height="46" /></span></div></div></header>`;
   }
@@ -308,10 +310,38 @@
       </div>
     </section>`;}
   function judgeDashboard(){
-    const completed=state.teams.filter(t=>isComplete(t.id)).length;
-    const draft=state.teams.filter(t=>!isComplete(t.id)&&countScores(record(t.id).draft)>0).length;
-    const visible=state.teams.filter(t=>{const s=judgeStatus(t.id)[0];return state.filter==='all'||(state.filter==='completed'&&isComplete(t.id))||(state.filter==='draft'&&['Draft','Pending Changes'].includes(s))||(state.filter==='notstarted'&&s==='Not Started');});
-    return `<div class="page-top"><div><div class="kicker">JUDGE PORTAL · PRIVATE</div><h2>Judge Dashboard</h2>${(LIVE.me?.name||state.judgeName)?`<div class="judge-whoami">${icon('users')} ${esc(LIVE.me?.name||state.judgeName)}</div>`:''}<p>รายชื่อทีมเรียงตามลำดับจับฉลาก แต่เลือกประเมินทีมไหนก่อนก็ได้</p></div><button class="btn outline small" data-action="logout">${icon('back')} ออกจากระบบ</button></div><div class="journey-intro"><div><span class="section-eyebrow">SELECT YOUR TEAM</span><h3>Every innovation deserves your attention.</h3><p>ให้คะแนนได้ทุกทีมตามที่ต้องการ • จัดแสดงตามลำดับจับฉลาก</p></div><div class="journey-intro-art" aria-hidden="true"></div></div><div class="stat-strip"><div class="stat"><span>ทั้งหมด</span><strong>${state.teams.length}</strong><small>Teams</small></div><div class="stat"><span>Submitted</span><strong>${completed}</strong><small>Completed</small></div><div class="stat"><span>ยังเป็น Draft</span><strong>${draft}</strong><small>Pending</small></div></div><div class="toolbar"><div class="chip-row">${[['all','ทั้งหมด'],['completed','Completed'],['draft','Draft / Pending'],['notstarted','Not Started']].map(([k,v])=>`<button class="chip ${state.filter===k?'active':''}" data-action="filter" data-filter="${k}">${v}</button>`).join('')}</div>${badge(`ส่งแล้ว ${completed}/${state.teams.length} ทีม`,'good')}</div><div class="team-grid">${visible.map(t=>{const [status,kind]=judgeStatus(t.id);const me=isComplete(t.id)?fixed(myTotal(record(t.id).confirmed)):'';return `<button class="team-card" data-action="select-team" data-id="${t.id}"><div class="topline"><span class="order">${String(state.teams.indexOf(t)+1).padStart(2,'0')}</span>${badge(status,kind)}</div><span class="teamname">${esc(t.name)}</span><span class="foot"><span>${me?`My score ${me}/100`:'แตะเพื่อให้คะแนน'}</span>${icon('arrow')}</span></button>`;}).join('')}</div>${!visible.length?'<div class="card empty">ไม่พบทีมในตัวกรองนี้</div>':''}<div class="notice" style="margin-top:19px">${icon('lock')} คะแนนที่เห็นเป็นคะแนนของคุณเท่านั้น และจะนำไปใช้คำนวณเมื่อยืนยัน Submit/Save Changes สำเร็จ</div>`;
+    const rows=state.teams.map((t,i)=>{const [status]=judgeStatus(t.id);return {t,i,status};});
+    const isDraft=x=>x.status==='Draft'||x.status==='Pending Changes';
+    const counts={all:rows.length,notstarted:rows.filter(x=>x.status==='Not Started').length,draft:rows.filter(isDraft).length,completed:rows.filter(x=>isComplete(x.t.id)).length};
+    const filter=['all','notstarted','draft','completed'].includes(state.filter)?state.filter:'all';
+    const visible=rows.filter(x=>filter==='all'||(filter==='completed'&&isComplete(x.t.id))||(filter==='draft'&&isDraft(x))||(filter==='notstarted'&&x.status==='Not Started'));
+    const pct=counts.all?Math.round(counts.completed/counts.all*100):0;
+    const label={'Locked':['ล็อกแล้ว','locked','ดูคะแนน'],'Pending Changes':['แก้ไขแล้ว ยังไม่ส่ง','draft','ส่งการแก้ไข'],'Completed':['ส่งแล้ว','done','ดูหรือแก้ไข'],'Draft':['แบบร่าง','draft','ให้คะแนนต่อ'],'Not Started':['ยังไม่เริ่ม','todo','เริ่มให้คะแนน']};
+    const tabs=[['all','ทั้งหมด'],['notstarted','ยังไม่เริ่ม'],['draft','แบบร่าง'],['completed','ส่งแล้ว']];
+    return `<section class="jd">
+      <div class="jd-head">
+        <div><h1 class="jd-title">ทีมที่ต้องประเมิน</h1><p class="jd-sub">เรียงตามลำดับนำเสนอ • เลือกประเมินทีมใดก่อนก็ได้</p></div>
+        <img class="jd-two" src="./assets/img/season-2.webp" alt="" aria-hidden="true"/>
+      </div>
+      <div class="jd-progress">
+        <div class="jd-progress-top"><h2>ส่งคะแนนแล้ว <b>${counts.completed}</b> จาก ${counts.all} ทีม</h2><span>ยังไม่เริ่ม ${counts.notstarted} ทีม · แบบร่าง ${counts.draft} ทีม</span></div>
+        <div class="jd-bar" role="progressbar" aria-valuemin="0" aria-valuemax="${counts.all}" aria-valuenow="${counts.completed}" aria-label="ส่งคะแนนแล้ว"><span style="width:${pct}%"></span></div>
+      </div>
+      <div class="jd-tabs" role="tablist">${tabs.map(([k,v])=>`<button type="button" role="tab" aria-selected="${filter===k}" class="jd-tab ${filter===k?'on':''}" data-action="filter" data-filter="${k}">${v} ${counts[k]}</button>`).join('')}</div>
+      <div class="jd-table" role="table" aria-label="รายชื่อทีม">
+        <div class="jd-row jd-th" role="row"><span role="columnheader">ลำดับนำเสนอ</span><span role="columnheader">ทีม</span><span role="columnheader">สถานะ</span><span role="columnheader">คะแนนที่ส่ง</span><span role="columnheader">การทำงาน</span></div>
+        ${visible.map(({t,i,status})=>{const [txt,cls,act]=label[status]||label['Not Started'];const total=isComplete(t.id)?myTotal(record(t.id).confirmed):null;
+          return `<div class="jd-row is-${cls}" role="row" data-action="select-team" data-id="${t.id}">
+            <span class="jd-order" role="cell">${String(i+1).padStart(2,'0')}</span>
+            <span class="jd-name" role="cell">${esc(t.name)}</span>
+            <span class="jd-status" role="cell">${cls==='done'?icon('check'):cls==='locked'?icon('lock'):''}${txt}</span>
+            <span class="jd-score${total===null?' is-empty':''}" role="cell">${total===null?'—':`${fixed(total)} / 100`}</span>
+            <span class="jd-act" role="cell"><button type="button" class="jd-link" data-action="select-team" data-id="${t.id}">${act}</button></span>
+          </div>`;}).join('')}
+        ${!visible.length?'<div class="jd-empty">ไม่มีทีมในหมวดนี้</div>':''}
+      </div>
+      <p class="jd-foot">${icon('lock')} แสดงเฉพาะคะแนนของคุณที่ยืนยันส่งล่าสุด</p>
+    </section>`;
   }
   function criterionCard(teamId,c){
     const r=record(teamId);const current=isValidScore(r.draft?.[c.id])?r.draft[c.id]:(isValidScore(r.confirmed?.[c.id])?r.confirmed[c.id]:null);
